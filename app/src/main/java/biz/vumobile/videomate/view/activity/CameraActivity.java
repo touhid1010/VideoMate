@@ -31,7 +31,7 @@ import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_RECORD_TIME;
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
 
     CameraView cameraView;
-    ImageButton imageButtonRecord, imageButtonSwitchCamera;
+    ImageButton imageButtonRecord, imageButtonSwitchCamera, imageButtonCameraClose;
 
     ImageView imageViewRecAnim;
     TextView textViewRecordDuration;
@@ -59,8 +59,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         textViewRecordDuration = findViewById(R.id.textViewRecordDuration);
         imageButtonRecord = findViewById(R.id.imageButtonRecord);
         imageButtonSwitchCamera = findViewById(R.id.imageButtonSwitchCamera);
+        imageButtonCameraClose = findViewById(R.id.imageButtonCameraClose);
         imageButtonRecord.setOnClickListener(this);
         imageButtonSwitchCamera.setOnClickListener(this);
+        imageButtonCameraClose.setOnClickListener(this);
 
         cameraView.setWhiteBalance(WhiteBalance.AUTO);
         cameraView.addCameraListener(new CameraListener() {
@@ -128,6 +130,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     cameraView.setFacing(Facing.FRONT);
                     imageButtonSwitchCamera.setImageResource(R.drawable.ic_action_camera_rear);
                 }
+                break;
+
+            case R.id.imageButtonCameraClose:
+                onBackPressed();
                 break;
 
         }

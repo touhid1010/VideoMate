@@ -36,9 +36,9 @@
         <TextView
             android:id="@+id/textViewRecordDuration"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/imageButtonRecord"
-            android:layout_height="wrap_content"
             android:text="00 Sec"
             android:textColor="#fff" />
 
@@ -53,5 +53,14 @@
         android:background="#00000000"
         android:padding="6dp"
         android:src="@drawable/ic_action_camera_front" />
+
+    <ImageButton
+        android:id="@+id/imageButtonCameraClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="#00000000"
+        android:padding="6dp"
+        app:srcCompat="@drawable/ic_action_close" />
 
 </RelativeLayout>

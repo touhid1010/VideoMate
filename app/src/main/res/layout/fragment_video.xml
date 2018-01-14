@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!--<com.otaliastudios.cameraview.CameraView-->
+        <!--android:id="@+id/cameraView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:keepScreenOn="true" />-->
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:layout_alignBottom="@+id/cameraView">-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/imageButtonRecord"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:background="#5b5b5b"-->
+            <!--android:contentDescription="TODO"-->
+            <!--android:padding="16dp"-->
+            <!--android:src="@drawable/ic_action_record" />-->
+
+    <!--</RelativeLayout>-->
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/imageButtonSwitchCamera"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:background="#00000000"-->
+        <!--android:padding="6dp"-->
+        <!--android:src="@drawable/ic_action_camera_front" />-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/imageViewRecAnim"-->
+            <!--android:layout_width="15dp"-->
+            <!--android:layout_height="15dp"-->
+            <!--android:layout_margin="3dp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/textViewRecordDuration"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="00 Sec"-->
+            <!--android:textColor="#fff" />-->
+
+    <!--</LinearLayout>-->
+
+</RelativeLayout>

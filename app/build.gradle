@@ -42,6 +42,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
 
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+
     implementation 'com.github.guilhe:circular-progress-view:1.2.1'
 
     compile 'com.github.dimorinny:floating-text-button:0.0.2'

@@ -1,9 +1,7 @@
 package biz.vumobile.videomate.networking;
 
 
-import java.util.List;
-
-import biz.vumobile.videomate.model.receivedata.TestClass;
+import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
 import biz.vumobile.videomate.utils.MyConstraints;
 import okhttp3.RequestBody;
@@ -19,10 +17,8 @@ import retrofit2.http.Part;
 
 public interface ApiInterface {
 
-    String BASE_URL = "http://wap.shabox.mobi/";
-
-    @GET("GCMPanel/ClubzAPI.aspx?cat=Slider")
-    Call<List<TestClass>> getContents();
+    @GET(MyConstraints.GET_ALL_POSTS)
+    Call<GetAllPostsClass> getPosts();
 
     @Multipart
     @POST(MyConstraints.API_POST_DATA)

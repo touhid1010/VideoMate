@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import biz.vumobile.videomate.R;
-import biz.vumobile.videomate.adapter.ContentTestAdapter;
-import biz.vumobile.videomate.model.receivedata.TestClass;
+import biz.vumobile.videomate.adapter.AdapterGetAllPosts;
+import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
+import biz.vumobile.videomate.model.receivedata.Result;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.RetrofitClient;
+import biz.vumobile.videomate.utils.MyConstraints;
 import biz.vumobile.videomate.utils.RecyclerTouchListener;
 import biz.vumobile.videomate.view.activity.VideoViewActivity;
 import retrofit2.Call;
@@ -35,12 +37,13 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private Intent intent;
+
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private ApiInterface apiInterface;
-    private Call<List<TestClass>> callContent;
-    private List<TestClass> testClasses = new ArrayList<>();
-    private TestClass testClass;
+    private Call<GetAllPostsClass> callLatest;
+    private List<Result> latestList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -54,10 +57,10 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        adapter = new ContentTestAdapter(getActivity(),testClasses);
+        adapter = new AdapterGetAllPosts(getActivity(), latestList);
         mRecyclerView.setAdapter(adapter);
 
-        apiInterface = RetrofitClient.getRetrofitClient(ApiInterface.BASE_URL).create(ApiInterface.class);
+        apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
 
         return view;
     }
@@ -76,12 +79,15 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
         });
 
 
-
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Log.d("Click","Clickable");
-                startActivity(new Intent(getActivity(), VideoViewActivity.class));
+                Log.d("Click", "Clickable");
+                Result posts = latestList.get(position);
+                intent = new Intent(getActivity(), VideoViewActivity.class);
+                intent.putExtra("video_url", posts.getVideoUrl());
+                startActivity(intent);
+                //startActivity(new Intent(getActivity(), VideoViewActivity.class));
             }
 
             @Override
@@ -95,29 +101,45 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
 
         swipeRefreshLayout.setRefreshing(true);
 
-        testClasses.clear();
+        latestList.clear();
 
-        callContent = apiInterface.getContents();
+        callLatest = apiInterface.getPosts();
 
-        callContent.enqueue(new Callback<List<TestClass>>() {
+        callLatest.enqueue(new Callback<GetAllPostsClass>() {
             @Override
-            public void onResponse(Call<List<TestClass>> call, Response<List<TestClass>> response) {
-
-                Log.d("Response",response.body().toString());
+            public void onResponse(Call<GetAllPostsClass> call, Response<GetAllPostsClass> response) {
 
                 swipeRefreshLayout.setRefreshing(false);
 
-                testClasses.addAll(response.body());
-
+                latestList.addAll(response.body().getResult());
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<List<TestClass>> call, Throwable t) {
-                Log.d("Response",t.getMessage());
+            public void onFailure(Call<GetAllPostsClass> call, Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
+//        callContent.enqueue(new Callback<List<TestClass>>() {
+//            @Override
+//            public void onResponse(Call<List<TestClass>> call, Response<List<TestClass>> response) {
+//
+//                Log.d("Response",response.body().toString());
+//
+//                swipeRefreshLayout.setRefreshing(false);
+//
+//                testClasses.addAll(response.body());
+//
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<TestClass>> call, Throwable t) {
+//                Log.d("Response",t.getMessage());
+//                swipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
     }
 
     @Override

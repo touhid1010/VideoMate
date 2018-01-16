@@ -20,10 +20,11 @@ import biz.vumobile.videomate.view.fragment.FragmentCommentViews;
 public class VideoViewActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Intent shareIntent;
+    private Intent intent;
     private VideoView videoView;
     private ImageView imgClose, imgComment, imgLoading, imgShare;
     private Uri uri;
-    private String videoUrl = "http://wap.shabox.mobi/CMS/Content/Graphics/Video%20Clips/D480x320/2018_1.mp4";
+    private String videoUrl;// = "http://wap.shabox.mobi/CMS/Content/Graphics/Video%20Clips/D480x320/2018_1.mp4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,10 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initUI() {
+
+        intent = getIntent();
+        videoUrl = intent.getStringExtra("video_url");
+
         imgShare = (ImageView) findViewById(R.id.imgShare);
         imgLoading = (ImageView) findViewById(R.id.imgLoading);
         videoView = (VideoView) findViewById(R.id.videoView);

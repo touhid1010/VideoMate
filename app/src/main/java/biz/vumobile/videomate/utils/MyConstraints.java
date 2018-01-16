@@ -9,6 +9,7 @@ public class MyConstraints {
     public static final long VIDEO_RECORD_TIME = 15000;
 
     public static final String API_BASE = "http://wap.shabox.mobi/VUMate/";
+    public static final String GET_ALL_POSTS = "api/post/getpost";
     public static final String API_POST_DATA = "api/post/Postup";
 
 

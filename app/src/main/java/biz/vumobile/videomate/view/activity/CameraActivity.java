@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     long recTimeToShow = 0;
     boolean runLoop = false;
 
+    private ProgressBar progressBarTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initUI() {
+
+        progressBarTimer = findViewById(R.id.progressBarTimer);
+
         cameraView = findViewById(R.id.cameraView);
         cameraView.setSessionType(SessionType.VIDEO);
 
@@ -199,6 +205,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                             return;
                         }
                         if (textViewRecordDuration != null) {
+                            progressBarTimer.setProgress((int) recTimeToShow);
                             textViewRecordDuration.setText(String.valueOf(recTimeToShow) + " sec");
                         }
                     }

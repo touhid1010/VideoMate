@@ -24,7 +24,7 @@
             android:scrollbarStyle="insideInset"
             app:tabGravity="center"
             app:tabPaddingEnd="0dp"
-            app:tabPaddingStart="0dp"
+            app:tabPaddingStart="5dp"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
 

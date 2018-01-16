@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import biz.vumobile.videomate.adapter.MyPagerAdapter;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout tabLayout;
 
     ImageButton imageButtonRecord;
+    Button buttonHome, buttonMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initUI() {
         viewPager = findViewById(R.id.viewPager);
         imageButtonRecord = findViewById(R.id.imageButtonRecord);
+        buttonHome = findViewById(R.id.buttonHome);
+        buttonMe = findViewById(R.id.buttonMe);
         imageButtonRecord.setOnClickListener(this);
+        buttonHome.setOnClickListener(this);
+        buttonMe.setOnClickListener(this);
     }
 
 
@@ -56,6 +62,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.imageButtonRecord:
                 startActivity(new Intent(this, CameraActivity.class));
+                break;
+
+            case R.id.buttonHome:
+
+                break;
+
+            case R.id.buttonMe:
+
                 break;
         }
     }
@@ -99,9 +113,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
-
-
 
 
 }

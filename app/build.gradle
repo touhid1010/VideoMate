@@ -46,5 +46,4 @@ dependencies {
 
     implementation 'com.github.guilhe:circular-progress-view:1.2.1'
 
-    compile 'com.github.dimorinny:floating-text-button:0.0.2'
 }

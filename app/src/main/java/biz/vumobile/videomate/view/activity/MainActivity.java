@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+        current_position = position;
+        Log.d("CurrentPosition", String.valueOf(current_position));
     }
 
     @Override

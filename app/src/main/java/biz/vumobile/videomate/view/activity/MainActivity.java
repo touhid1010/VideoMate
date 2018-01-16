@@ -11,18 +11,20 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import biz.vumobile.videomate.adapter.MyPagerAdapter;
 import biz.vumobile.videomate.R;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static final int EXTERNAL_STORAGE_PERMISSION_CONSTANT = 100;
     private ViewPager viewPager;
     private MyPagerAdapter pagerAdapter;
     private TabLayout tabLayout;
+    private int current_position;
 
     ImageButton imageButtonRecord;
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(1);
 
         // tab layout
         tabLayout = findViewById(R.id.tabLayout);
@@ -101,7 +104,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+    }
 
+    @Override
+    public void onPageSelected(int position) {
+        current_position = position;
+        Log.d("CurrentPosition", String.valueOf(current_position));
+    }
 
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

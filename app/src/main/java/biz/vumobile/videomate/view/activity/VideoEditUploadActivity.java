@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -23,6 +24,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import biz.vumobile.videomate.R;
+import biz.vumobile.videomate.login.UserSingleton;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.ProgressRequestBody;
@@ -47,6 +49,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
     EditText editTextDescription;
     String videoPath;
     CircularProgressView circularProgressView;
+    TextView textViewUploadPercentage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,8 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
 
         videoView = findViewById(R.id.videoView);
         imageButtonClose = findViewById(R.id.imageButtonClose);
+        textViewUploadPercentage = findViewById(R.id.textViewUploadPercentage);
+        textViewUploadPercentage.setVisibility(View.INVISIBLE);
         buttonPost = findViewById(R.id.buttonPost);
         editTextDescription = findViewById(R.id.editTextDescription);
         imageButtonClose.setOnClickListener(this);
@@ -86,7 +91,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.buttonPost:
-                uploadFile(videoPath, editTextDescription.getText().toString(), "Touhid");
+                uploadFile(videoPath, editTextDescription.getText().toString(), String.valueOf(UserSingleton.getInstanceOfUserModel().getID()) + "");
                 break;
         }
     }
@@ -113,6 +118,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
 //        }
 //    }
 //
+
     private String getRealPathFromURI(Uri contentUri) {
         String[] proj = {MediaStore.Video.Media.DATA};
         CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
@@ -137,7 +143,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
         RequestBody descBody = RequestBody.create(MediaType.parse("text/plain"), desc);
         RequestBody uId = RequestBody.create(MediaType.parse("text/plain"), userId);
 
-        // The gson builder
+        // The GSON builder
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -188,6 +194,9 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
         Log.d(TAG, "onProgressUpdate: " + percentage);
         circularProgressView.setVisibility(View.VISIBLE);
         circularProgressView.setProgress(percentage);
+
+        textViewUploadPercentage.setVisibility(View.VISIBLE);
+        textViewUploadPercentage.setText(percentage + " %");
     }
 
     @Override

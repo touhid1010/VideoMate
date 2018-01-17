@@ -4,9 +4,12 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +21,9 @@ import android.widget.ImageButton;
 
 import biz.vumobile.videomate.adapter.MyPagerAdapter;
 import biz.vumobile.videomate.R;
+import biz.vumobile.videomate.view.fragment.FragmentMe;
+
+import static biz.vumobile.videomate.utils.MyConstraints.FRAGMENT_TAG_ME;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
@@ -29,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ImageButton imageButtonRecord;
     Button buttonHome, buttonMe;
+    FragmentMe fragmentMe;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageButtonRecord.setOnClickListener(this);
         buttonHome.setOnClickListener(this);
         buttonMe.setOnClickListener(this);
+
+        fragmentMe = new FragmentMe();
+        fragmentManager = getSupportFragmentManager();
     }
 
 
@@ -68,13 +79,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.buttonHome:
-
+                removeFragment(fragmentMe);
                 break;
 
             case R.id.buttonMe:
-
+                addFragment(R.id.frameLayoutFragmentPlaceholder, fragmentMe, FRAGMENT_TAG_ME);
                 break;
         }
+    }
+
+    protected void addFragment(@IdRes int containerViewId,
+                               @NonNull Fragment fragment,
+                               @NonNull String fragmentTag) {
+
+        Fragment fragmentA = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ME);
+        if (fragmentA == null) {
+            fragmentManager
+                    .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
+                    .add(containerViewId, fragment, fragmentTag)
+                    .disallowAddToBackStack()
+                    .commit();
+        }
+
+    }
+
+    protected void removeFragment(@NonNull Fragment fragment) {
+        fragmentManager
+                .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
+                .remove(fragment)
+                .commit();
     }
 
     private void runTimePermission() {

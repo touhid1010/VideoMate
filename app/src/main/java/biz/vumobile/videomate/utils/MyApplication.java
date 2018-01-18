@@ -1,21 +1,16 @@
-package biz.vumobile.videomate.login;
+package biz.vumobile.videomate.utils;
+
+import android.app.Application;
 
 import biz.vumobile.videomate.model.user.Userinfo;
 
 /**
- * Created by IT-10 on 1/17/2018.
+ * Created by IT-10 on 1/18/2018.
  */
 
-/**
- * will return Userinfo singleton
- */
-public class UserSingleton {
+public class MyApplication extends Application {
 
     private static Userinfo userinfo;
-
-    private UserSingleton() {
-
-    }
 
     public static Userinfo getInstanceOfUserModel() {
         if (userinfo == null) {
@@ -23,6 +18,5 @@ public class UserSingleton {
         }
         return userinfo;
     }
-
 
 }

@@ -25,10 +25,10 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import biz.vumobile.videomate.R;
-import biz.vumobile.videomate.login.UserSingleton;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.ProgressRequestBody;
+import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.MyConstraints;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -93,7 +93,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
 
             case R.id.buttonPost:
                 hideKeypad();
-                uploadFile(videoPath, editTextDescription.getText().toString(), String.valueOf(UserSingleton.getInstanceOfUserModel().getID()) + "");
+                uploadFile(videoPath, editTextDescription.getText().toString(), String.valueOf(MyApplication.getInstanceOfUserModel().getID()) + "");
                 break;
         }
     }

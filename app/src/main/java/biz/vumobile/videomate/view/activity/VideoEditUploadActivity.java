@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -91,8 +92,16 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.buttonPost:
+                hideKeypad();
                 uploadFile(videoPath, editTextDescription.getText().toString(), String.valueOf(UserSingleton.getInstanceOfUserModel().getID()) + "");
                 break;
+        }
+    }
+
+    private void hideKeypad() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }
 
@@ -171,12 +180,16 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
         call.enqueue(new Callback<MyUploadPostResponseModel>() {
             @Override
             public void onResponse(Call<MyUploadPostResponseModel> call, Response<MyUploadPostResponseModel> response) {
-                if (response.body().getResult().equals("Success")) {
-                    circularProgressView.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "Video Uploaded Successfully...", Toast.LENGTH_LONG).show();
-                    onBackPressed();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please try again...", Toast.LENGTH_LONG).show();
+                try {
+                    if (response.body().getResult().equals("Success")) {
+                        circularProgressView.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "Video Uploaded Successfully...", Toast.LENGTH_LONG).show();
+                        onBackPressed();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please try again...", Toast.LENGTH_LONG).show();
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
                 }
                 Log.d("ttt", "onResponse: " + response.body().getResult());
             }

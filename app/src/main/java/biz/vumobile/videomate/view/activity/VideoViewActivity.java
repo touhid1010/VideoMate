@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
@@ -16,11 +19,17 @@ import com.bumptech.glide.Glide;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.view.fragment.FragmentCommentViews;
+import biz.vumobile.videomate.view.fragment.FragmentMe;
+
+import static biz.vumobile.videomate.utils.MyConstraints.FRAGMENT_TAG_ME;
 
 public class VideoViewActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private Fragment fragmentMe;
+    private ImageView imgUserImage;
     private Intent shareIntent;
     private Intent intent;
+    private FragmentManager fragmentManager;
     private VideoView videoView;
     private ImageView imgClose, imgComment, imgLoading, imgShare;
     private Uri uri;
@@ -34,6 +43,9 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         initUI();
 
         Glide.with(getApplicationContext()).load(R.drawable.loading).into(imgLoading);
+
+        fragmentMe = new FragmentMe();
+        fragmentManager = getSupportFragmentManager();
 
         uri = Uri.parse(videoUrl);
         videoView.setVideoURI(uri);
@@ -53,15 +65,22 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     private void initUI() {
 
+        // this used for hide top status bar
+        getWindow().clearFlags(WindowManager
+                .LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         intent = getIntent();
         videoUrl = intent.getStringExtra("video_url");
-
+        imgUserImage = findViewById(R.id.imgUserImage);
         imgShare = (ImageView) findViewById(R.id.imgShare);
         imgLoading = (ImageView) findViewById(R.id.imgLoading);
         videoView = (VideoView) findViewById(R.id.videoView);
         imgClose = (ImageView) findViewById(R.id.imgClose);
         imgComment = (ImageView) findViewById(R.id.imgComment);
 
+        imgUserImage.setOnClickListener(this);
         imgComment.setOnClickListener(this);
         imgClose.setOnClickListener(this);
         imgShare.setOnClickListener(this);
@@ -86,6 +105,23 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             case R.id.imgShare:
                 shareContent();
                 break;
+            case R.id.imgUserImage:
+                // go to user profile
+                addFragment(R.id.framelayoutProfile, fragmentMe, FRAGMENT_TAG_ME);
+                break;
+        }
+    }
+
+    private void addFragment(@IdRes int containerViewId,
+                             @NonNull Fragment fragment,
+                             @NonNull String fragmentTag) {
+        Fragment fragmentA = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ME);
+        if (fragmentA == null) {
+            fragmentManager
+                    .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
+                    .add(containerViewId, fragment, fragmentTag)
+                    .disallowAddToBackStack()
+                    .commit();
         }
     }
 
@@ -99,9 +135,14 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     protected void onPause() {
+        videoView.pause();
         super.onPause();
+    }
 
-        videoView.stopPlayback();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.resume();
     }
 
     public void openFragment(final Fragment fragment) {

@@ -38,12 +38,13 @@
         android:id="@+id/buttonPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
-        android:shadowRadius="20"
-        android:textColor="@android:color/white"
-        android:text="Post"
         android:backgroundTint="@android:color/holo_green_dark"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextDescription"
+        android:shadowRadius="20"
+        android:text="Post"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton

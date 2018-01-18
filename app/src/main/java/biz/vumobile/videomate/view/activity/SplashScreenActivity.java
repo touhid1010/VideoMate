@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +34,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private Call<NewUserRegisterResult> newUserRegisterResultCall;
     private Call<UserModel> userModelCall;
 
+    ImageView imageViewAnimation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +44,17 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
+
+        imageViewAnimation = findViewById(R.id.imageViewAnimation);
+
+
+        /**
+         * User register logic:
+         *
+         * Check SP if exists get user data by id from api
+         * if not exists register guest user and get user data by id which comes after register response
+         *
+         */
 
         String uId = MyLoginOperation.getInstance(this).getUserId();
         if (uId.equals("")) {
@@ -51,6 +68,16 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     } // end of onCreate
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Glide.with(this)
+                .load(R.raw.video_animation)
+                .into(new GlideDrawableImageViewTarget((ImageView) findViewById(R.id.imageViewAnimation)));
+
+
+    }
 
     public void getUserDataForSingleton(String uId) {
 
@@ -116,7 +143,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     MyLoginOperation.getInstance(getApplicationContext()).setUserId(response.body().getId().toString() + "");
                 }
 
-                startMainActivity();
+                getUserDataForSingleton(String.valueOf(response.body().getId()));
 
             }
 

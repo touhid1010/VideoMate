@@ -1,5 +1,8 @@
 package biz.vumobile.videomate.view.fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,7 +32,7 @@ import biz.vumobile.videomate.utils.SimpleDividerItemDecoration;
  * Created by IT-10 on 1/16/2018.
  */
 
-public class FragmentMe extends Fragment implements View.OnClickListener {
+public class FragmentMe extends Fragment implements View.OnClickListener, MeMenuRecyclerAdapter.ItemClickListener {
 
     RecyclerView recyclerViewMeMenu;
     List<MeMenuModel> meMenuModels = new ArrayList<>();
@@ -70,12 +73,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
 
         recyclerViewMeMenu.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
-        meMenuRecyclerAdapter.setItemClickListener(new MeMenuRecyclerAdapter.ItemClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-                Toast.makeText(getActivity(), "" + meMenuModels.get(position).getMenuName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        meMenuRecyclerAdapter.setItemClickListener(this);
 
         setUserInfoToUI();
 
@@ -109,7 +107,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
 
     }
 
-    @Override
+    @Override // tab
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.linearLayoutVideoTab:
@@ -126,6 +124,41 @@ public class FragmentMe extends Fragment implements View.OnClickListener {
         }
     }
 
-    
+
+    @Override // recyclerView
+    public void onClick(View v, int position) {
+        switch (position) {
+            case 0:
+                startActivity(getOpenFacebookIntent(getActivity()));
+                break;
+
+            case 1:
+                sendEmailFeedback(getActivity());
+                break;
+
+            case 2:
+
+                break;
+        }
+
+    }
+
+
+    public static Intent getOpenFacebookIntent(Context context) {
+        try {
+            context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/167500539949438"));
+        } catch (Exception e) {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/vumobileltd/"));
+        }
+    }
+
+    public static void sendEmailFeedback(Context context) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "touhidul.islam@vumobile.biz", null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Video Mate Feedback");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Dear concern, ");
+        context.startActivity(Intent.createChooser(emailIntent, "Send email..."));
+    }
+
 
 }

@@ -18,7 +18,7 @@ import java.util.List;
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.AdapterGetAllPosts;
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
-import biz.vumobile.videomate.model.receivedata.Result;
+import biz.vumobile.videomate.model.receivedata.Video;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.RetrofitClient;
 import biz.vumobile.videomate.utils.MyConstraints;
@@ -32,7 +32,7 @@ import retrofit2.Response;
  * Created by IT-10 on 1/14/2018.
  */
 
-public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -43,7 +43,7 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
 
     private ApiInterface apiInterface;
     private Call<GetAllPostsClass> callLatest;
-    private List<Result> latestList = new ArrayList<>();
+    private List<Video> latestListVideo = new ArrayList<>();
 
     @Nullable
     @Override
@@ -57,7 +57,7 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        adapter = new AdapterGetAllPosts(getActivity(), latestList);
+        adapter = new AdapterGetAllPosts(getActivity(), latestListVideo);
         mRecyclerView.setAdapter(adapter);
 
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
@@ -83,7 +83,7 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void onClick(View view, int position) {
                 Log.d("Click", "Clickable");
-                Result posts = latestList.get(position);
+                Video posts = latestListVideo.get(position);
                 intent = new Intent(getActivity(), VideoViewActivity.class);
                 intent.putExtra("video_url", posts.getVideoUrl());
                 startActivity(intent);
@@ -101,7 +101,7 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
 
         swipeRefreshLayout.setRefreshing(true);
 
-        latestList.clear();
+        latestListVideo.clear();
 
         callLatest = apiInterface.getPosts();
 
@@ -111,7 +111,7 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
 
                 swipeRefreshLayout.setRefreshing(false);
 
-                latestList.addAll(response.body().getResult());
+                latestListVideo.addAll(response.body().getVideos());
                 adapter.notifyDataSetChanged();
             }
 
@@ -146,4 +146,16 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
     public void onRefresh() {
         parseContent(apiInterface);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
 }

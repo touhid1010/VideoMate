@@ -1,25 +1,22 @@
+
 package biz.vumobile.videomate.model.receivedata;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-/**
- * Created by toukirul on 15/1/2018.
- */
-
 public class GetAllPostsClass {
 
-    @SerializedName("result")
+    @SerializedName("Videos")
     @Expose
-    private List<Result> result = null;
+    private List<Video> videos = null;
 
-    public List<Result> getResult() {
-        return result;
+    public List<Video> getVideos() {
+        return videos;
     }
 
-    public void setResult(List<Result> result) {
-        this.result = result;
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
     }
+
 }

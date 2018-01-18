@@ -1,8 +1,11 @@
 package biz.vumobile.videomate.view.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.MyPagerAdapter;
+import biz.vumobile.videomate.utils.CallBackLatestData;
 import biz.vumobile.videomate.view.fragment.FragmentMe;
 
 import static biz.vumobile.videomate.utils.MyConstraints.FRAGMENT_TAG_ME;
@@ -70,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         fragmentMe = new FragmentMe();
         fragmentManager = getSupportFragmentManager();
+
+        registerReceiver(receiver, new IntentFilter("upload.success"));
     }
 
 
@@ -195,5 +201,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
+    }
+
+    CallBackLatestData callBackLatestData;
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("upload.success")){
+                viewPager.setCurrentItem(2);
+                // TODO
+//                intent = new Intent("load.latest");
+//                intent.putExtra("status","1");
+//                sendBroadcast(intent);
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("LifeCycle","resume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("LifeCycle","pause");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 }

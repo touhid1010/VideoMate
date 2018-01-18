@@ -1,8 +1,8 @@
 package biz.vumobile.videomate.view.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,9 +10,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.login.MyLoginOperation;
@@ -88,6 +85,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
                 Log.d(TAG, "onResponse: " + response.body());
 
+                if (response.body().getUserinfo().size() < 1){
+                    return;
+                }
                 Userinfo userinfo = response.body().getUserinfo().get(0);
 
                 if (userinfo.getName().equals("")) {

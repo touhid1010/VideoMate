@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Video Mate</string>
     <string name="record">Record</string>
+
+    <string name="facebook_app_id">1989011458019592</string>
+    <string name="fb_login_protocol_scheme">fb1989011458019592</string>
+
 </resources>

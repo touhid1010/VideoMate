@@ -87,6 +87,8 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
             public void onClick(View view, int position) {
                 Log.d("Click", "Clickable");
                 Video posts = resultList.get(position);
+                VideoViewActivity.like_count = posts.getLike();
+                VideoViewActivity.video_id = String.valueOf(posts.getVideoId());
                 intent = new Intent(getActivity(), VideoViewActivity.class);
                 intent.putExtra("video_url", posts.getVideoUrl());
                 startActivity(intent);

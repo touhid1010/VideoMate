@@ -13,6 +13,7 @@ public class MyConstraints {
     public static final String API_BASE = "http://wap.shabox.mobi/VUMate/";
     public static final String GET_ALL_POSTS = "api/post/getpost";
     public static final String API_POST_DATA = "api/post/Postup";
+    public static final String API_GIVE_LIKE = "api/Post/PostLike";
 
     public static final String API_REGISTER_USER = "api/User/PostNewUser";
     public static final String API_GET_USER = "api/User/GetUserInfo"; //?id=5

@@ -17,11 +17,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.CommentsAdapter;
 import biz.vumobile.videomate.model.receivedata.CommentsClass;
+import biz.vumobile.videomate.model.senddata.LikeClass;
+import biz.vumobile.videomate.networking.ApiInterface;
+import biz.vumobile.videomate.networking.RetrofitClient;
+import biz.vumobile.videomate.utils.MyConstraints;
+import biz.vumobile.videomate.view.activity.VideoViewActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -36,7 +45,8 @@ public class FragmentCommentViews extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager mManager;
     private EditText etComment;
-
+    private Call<LikeClass> likeClassCall;
+    private ApiInterface apiInterface;
     private List<CommentsClass> commentsClassList = new ArrayList<>();
     private CommentsClass commentsClass;
 
@@ -66,7 +76,7 @@ public class FragmentCommentViews extends Fragment {
 
                 if (!etComment.getText().equals("")){
                     hideSoftKeyBoard();
-                    sendComments();
+                    sendComments(etComment.getText().toString(), VideoViewActivity.video_id);
                 }
                 etComment.setText("");
             }
@@ -79,7 +89,7 @@ public class FragmentCommentViews extends Fragment {
                 if (i == EditorInfo.IME_ACTION_SEND){
                     etComment.setText("");
                     hideSoftKeyBoard();
-                    sendComments();
+                    sendComments(etComment.getText().toString(),VideoViewActivity.video_id);
                     return true;
                 }
                 return false;
@@ -101,16 +111,42 @@ public class FragmentCommentViews extends Fragment {
         }
     }
 
-    private void sendComments() {
+    private void sendComments(String comment, String video_id) {
         Log.d("Comments","method call");
-        commentsClass = new CommentsClass();
-        commentsClass.setDate_time("12 hours ago");
-        commentsClass.setUser_comment("This is user's comment!");
-        commentsClass.setUser_name("User Name-!");
 
-        commentsClassList.add(commentsClass);
+        hitCommentApi(comment, video_id);
 
-        adapter.notifyDataSetChanged();
+    }
 
+    private void hitCommentApi(final String comment, String video_id) {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("VideoId",video_id);
+        map.put("Comment", comment);
+
+        apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
+        likeClassCall = apiInterface.giveComment(map);
+
+        likeClassCall.enqueue(new Callback<LikeClass>() {
+            @Override
+            public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
+
+                Log.d("CommentStatus", response.body().getResult());
+
+                commentsClass = new CommentsClass();
+                commentsClass.setDate_time("12 hours ago");
+                commentsClass.setUser_comment(comment);
+                commentsClass.setUser_name("User Name-!");
+
+                commentsClassList.add(commentsClass);
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<LikeClass> call, Throwable t) {
+
+            }
+        });
     }
 }

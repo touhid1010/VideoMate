@@ -1,7 +1,10 @@
 package biz.vumobile.videomate.networking;
 
 
+import java.util.HashMap;
+
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
+import biz.vumobile.videomate.model.senddata.LikeClass;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
 import biz.vumobile.videomate.model.user.NewUserRegisterResult;
 import biz.vumobile.videomate.model.user.UserModel;
@@ -21,6 +24,12 @@ import retrofit2.http.Query;
  */
 
 public interface ApiInterface {
+
+    @POST("api/Post/PostComment")
+    Call<LikeClass> giveComment(@Body HashMap<String, String> body);
+
+    @POST(MyConstraints.API_GIVE_LIKE)
+    Call<LikeClass> giveLike(@Query("id")String id);
 
     @POST(MyConstraints.API_REGISTER_USER)
     Call<NewUserRegisterResult> registerUser(@Body Userinfo userinfo);

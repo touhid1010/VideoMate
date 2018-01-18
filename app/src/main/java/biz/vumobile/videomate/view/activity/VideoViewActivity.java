@@ -10,29 +10,44 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 
 import biz.vumobile.videomate.R;
+import biz.vumobile.videomate.model.senddata.LikeClass;
+import biz.vumobile.videomate.networking.ApiInterface;
+import biz.vumobile.videomate.networking.RetrofitClient;
+import biz.vumobile.videomate.utils.MyConstraints;
 import biz.vumobile.videomate.view.fragment.FragmentCommentViews;
 import biz.vumobile.videomate.view.fragment.FragmentMe;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static biz.vumobile.videomate.utils.MyConstraints.FRAGMENT_TAG_ME;
 
 public class VideoViewActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private int comment_count;
     private Fragment fragmentMe;
     private ImageView imgUserImage;
     private Intent shareIntent;
     private Intent intent;
+    private TextView txtLikeCount;
     private FragmentManager fragmentManager;
     private VideoView videoView;
-    private ImageView imgClose, imgComment, imgLoading, imgShare;
+    private ImageView imgClose, imgComment, imgLoading, imgShare, imglike;
+    private ApiInterface apiInterface;
+    private Call<LikeClass> likeClassCall;
     private Uri uri;
+    public static int like_count;
+    public static String video_id;
     private String videoUrl;// = "http://wap.shabox.mobi/CMS/Content/Graphics/Video%20Clips/D480x320/2018_1.mp4";
 
     @Override
@@ -71,8 +86,13 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        txtLikeCount = findViewById(R.id.txtLikeCount);
+        imglike = findViewById(R.id.imglikee);
         intent = getIntent();
+
         videoUrl = intent.getStringExtra("video_url");
+
+        txtLikeCount = findViewById(R.id.txtLikeCount);
         imgUserImage = findViewById(R.id.imgUserImage);
         imgShare = (ImageView) findViewById(R.id.imgShare);
         imgLoading = (ImageView) findViewById(R.id.imgLoading);
@@ -80,10 +100,13 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         imgClose = (ImageView) findViewById(R.id.imgClose);
         imgComment = (ImageView) findViewById(R.id.imgComment);
 
+        imglike.setOnClickListener(this);
         imgUserImage.setOnClickListener(this);
         imgComment.setOnClickListener(this);
         imgClose.setOnClickListener(this);
         imgShare.setOnClickListener(this);
+
+        txtLikeCount.setText(String.valueOf(like_count));
     }
 
     @Override
@@ -109,7 +132,32 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 // go to user profile
                 addFragment(R.id.framelayoutProfile, fragmentMe, FRAGMENT_TAG_ME);
                 break;
+            case R.id.imglikee:
+                like_count+=1;
+                txtLikeCount.setText(String.valueOf(like_count));
+                giveLike(video_id);
+                break;
         }
+    }
+
+    private void giveLike(String video_id) {
+
+        apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
+
+        likeClassCall = apiInterface.giveLike(video_id);
+
+        likeClassCall.enqueue(new Callback<LikeClass>() {
+            @Override
+            public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
+                Log.d("ResponseLike",response.body().getResult());
+            }
+
+            @Override
+            public void onFailure(Call<LikeClass> call, Throwable t) {
+                Log.d("ResponseLike",t.getMessage());
+            }
+        });
+
     }
 
     private void addFragment(@IdRes int containerViewId,

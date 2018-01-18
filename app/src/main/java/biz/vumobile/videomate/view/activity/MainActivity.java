@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-
     }
 
 
@@ -198,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 doubleBackToExitPressedOnce=false;
@@ -230,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        removeFragment(fragmentMe);
         Log.d("LifeCycle","pause");
     }
 

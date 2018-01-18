@@ -28,6 +28,7 @@ import biz.vumobile.videomate.model.user.MeMenuModel;
 import biz.vumobile.videomate.model.user.Userinfo;
 import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.SimpleDividerItemDecoration;
+import biz.vumobile.videomate.view.activity.LoginActivity;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -53,8 +54,6 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     ImageView imageViewProfilePic;
     TextView textViewUserName, textViewUserId, textViewVideoCount, textViewFollowingCount, textViewFollowerCount;
 
-    CallbackManager callbackManager;
-    LoginButton loginButton;
 
     @Nullable
     @Override
@@ -96,18 +95,13 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
         loadListData();
 
 
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = view.findViewById(R.id.login_button);
-        facebookLoginUiAndOperation();
-
-
     }
 
     private void setUserInfoToUI() {
         Userinfo userinfo = MyApplication.getInstanceOfUserModel();
 
 //        imageViewProfilePic = view.findViewById(R.id.imageViewProfilePic);
-        Glide.with(getActivity()).load(userinfo.getEmail()).placeholder(R.drawable.user).into(imageViewProfilePic);
+        Glide.with(getActivity()).load(userinfo.getImageUrl()).placeholder(R.drawable.user).into(imageViewProfilePic);
         textViewUserName.setText(userinfo.getName());
         textViewUserId.setText("ID: " + String.valueOf(userinfo.getID()));
         textViewVideoCount.setText(String.valueOf(userinfo.getTotalUploadedVideo()));
@@ -133,19 +127,19 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.linearLayoutVideoTab:
-                Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.linearLayoutFollowingTab:
-                Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.linearLayoutFollowerTab:
-                Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.imageButtonFacebookConnect:
-                Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
                 break;
         }
     }
@@ -186,49 +180,6 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
         context.startActivity(Intent.createChooser(emailIntent, "Send email..."));
     }
 
-    private void facebookLoginUiAndOperation() {
-
-        loginButton.setReadPermissions("email");
-        // If using in a fragment
-        loginButton.setFragment(this);
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        // App code
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
-
-
-    }
 
 
 }

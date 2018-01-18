@@ -6,7 +6,7 @@ package biz.vumobile.videomate.utils;
 
 public class MyConstraints {
     public static final String VIDEO_PATH = "path";
-    public static final long VIDEO_RECORD_TIME = 15000;
+    public static final long VIDEO_RECORD_TIME = 5000;
 
     public static final String FRAGMENT_TAG_ME = "FragmentMe";
 
@@ -17,7 +17,7 @@ public class MyConstraints {
 
     public static final String API_REGISTER_USER = "api/User/PostNewUser";
     public static final String API_GET_USER = "api/User/GetUserInfo"; //?id=5
-
+    public static final String API_POST_UPDATE = "api/User/PostUpdateUser";
 
     // Shared pref
     public static final String SHAR_PREF_NAME_USER = "pref_name_user";

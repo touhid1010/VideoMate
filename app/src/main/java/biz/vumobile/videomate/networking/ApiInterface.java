@@ -7,6 +7,7 @@ import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
 import biz.vumobile.videomate.model.senddata.LikeClass;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
 import biz.vumobile.videomate.model.user.NewUserRegisterResult;
+import biz.vumobile.videomate.model.user.UpdateUserResult;
 import biz.vumobile.videomate.model.user.UserModel;
 import biz.vumobile.videomate.model.user.Userinfo;
 import biz.vumobile.videomate.utils.MyConstraints;
@@ -36,6 +37,9 @@ public interface ApiInterface {
 
     @GET(MyConstraints.API_GET_USER)
     Call<UserModel> getUserById(@Query("id") String uId);
+
+    @POST(MyConstraints.API_POST_UPDATE)
+    Call<UpdateUserResult> updateUserWithFbInfo(@Body Userinfo userinfo);
 
     @GET(MyConstraints.GET_ALL_POSTS)
     Call<GetAllPostsClass> getPosts();

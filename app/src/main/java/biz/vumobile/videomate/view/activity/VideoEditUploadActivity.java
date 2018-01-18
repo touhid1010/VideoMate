@@ -94,6 +94,10 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.buttonPost:
+                if (MyApplication.getInstanceOfUserModel().getFblogin() == 0) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                    return;
+                }
                 hideKeypad();
                 uploadFile(videoPath, editTextDescription.getText().toString(), String.valueOf(MyApplication.getInstanceOfUserModel().getID()) + "");
                 break;
@@ -101,7 +105,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
     }
 
     private void hideKeypad() {
-        if(getCurrentFocus()!=null) {
+        if (getCurrentFocus() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
@@ -194,7 +198,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
                     } else {
                         Toast.makeText(getApplicationContext(), "Please try again...", Toast.LENGTH_LONG).show();
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
                 Log.d("ttt", "onResponse: " + response.body().getResult());

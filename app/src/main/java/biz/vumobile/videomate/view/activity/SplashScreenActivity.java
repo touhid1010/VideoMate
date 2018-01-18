@@ -91,6 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 if (response.body().getUserinfo().size() < 1){
                     registerUserRequest();
+                    return;
                 }
                 Userinfo userinfo = response.body().getUserinfo().get(0);
 

@@ -3,6 +3,7 @@ package biz.vumobile.videomate.networking;
 
 import java.util.HashMap;
 
+import biz.vumobile.videomate.model.receivedata.CommentsClass;
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
 import biz.vumobile.videomate.model.senddata.LikeClass;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
@@ -26,7 +27,16 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @POST("api/Post/PostComment")
+    @POST(MyConstraints.POST_FOLLOWER_USER)
+    Call<LikeClass> followUser(@Body HashMap<String, String> body);
+
+    @POST(MyConstraints.POST_VIEW)
+    Call<LikeClass> setView(@Query("id") String uId);
+
+    @GET(MyConstraints.GET_COMMENT)
+    Call<CommentsClass> getComments(@Query("id") String uId);
+
+    @POST(MyConstraints.POST_COMMENT)
     Call<LikeClass> giveComment(@Body HashMap<String, String> body);
 
     @POST(MyConstraints.API_GIVE_LIKE)

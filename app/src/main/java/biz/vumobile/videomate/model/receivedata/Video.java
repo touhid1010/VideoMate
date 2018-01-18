@@ -27,6 +27,17 @@ public class Video {
     @SerializedName("Comment")
     @Expose
     private Integer comment;
+    @SerializedName("View")
+    @Expose
+    private Integer view;
+
+    public Integer getView() {
+        return view;
+    }
+
+    public void setView(Integer view) {
+        this.view = view;
+    }
 
     public User getUser() {
         return user;

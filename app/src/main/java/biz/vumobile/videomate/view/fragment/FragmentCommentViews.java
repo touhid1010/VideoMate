@@ -87,11 +87,11 @@ public class FragmentCommentViews extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
 
                 if (i == EditorInfo.IME_ACTION_SEND){
-                    etComment.setText("");
                     hideSoftKeyBoard();
                     sendComments(etComment.getText().toString(),VideoViewActivity.video_id);
                     return true;
                 }
+                etComment.setText("");
                 return false;
             }
         });

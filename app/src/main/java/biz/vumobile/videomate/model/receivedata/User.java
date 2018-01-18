@@ -8,7 +8,7 @@ public class User {
 
     @SerializedName("UserID")
     @Expose
-    private Integer userID;
+    private String userID;
     @SerializedName("UserName")
     @Expose
     private String userName;
@@ -16,11 +16,11 @@ public class User {
     @Expose
     private Object imageUrl;
 
-    public Integer getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(Integer userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 

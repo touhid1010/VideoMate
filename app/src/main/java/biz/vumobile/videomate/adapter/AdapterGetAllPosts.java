@@ -49,6 +49,7 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
         holder.imgItem.getLayoutParams().height = getRandomIntInRange(300, 250);
         holder.imgItem.setBackgroundColor(getRandomHSVColor());
         holder.txtTitle.setText(result.getDescription());
+        holder.txtViewsCount.setText(String.valueOf(result.getView()));
         Glide.with(mContext).load(result.getThumbnail()).into(holder.imgItem);
 
     }
@@ -61,10 +62,11 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView imgItem;
-        private TextView txtTitle;
+        private TextView txtTitle, txtViewsCount;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            txtViewsCount = itemView.findViewById(R.id.txtViewsCount);
             imgItem = itemView.findViewById(R.id.imgItem);
             txtTitle = itemView.findViewById(R.id.txtContentTitle);
         }

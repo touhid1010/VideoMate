@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import biz.vumobile.videomate.R;
-import biz.vumobile.videomate.model.receivedata.CommentsClass;
+import biz.vumobile.videomate.model.receivedata.Comment;
 
 /**
  * Created by toukirul on 11/1/2018.
@@ -20,9 +20,9 @@ import biz.vumobile.videomate.model.receivedata.CommentsClass;
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyCommentViewHolder> {
 
     private Context mCOntext;
-    private List<CommentsClass> commentsClassList;
+    private List<Comment> commentsClassList;
 
-    public CommentsAdapter(Context context, List<CommentsClass> list){
+    public CommentsAdapter(Context context, List<Comment> list){
         this.mCOntext = context;
         this.commentsClassList = list;
     }
@@ -38,17 +38,19 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyComm
     @Override
     public void onBindViewHolder(MyCommentViewHolder holder, int position) {
 
-        CommentsClass commentsClass = commentsClassList.get(position);
-        Log.d("Comments",commentsClass.getUser_comment());
-        holder.txtUserNameComment.setText(commentsClass.getUser_name());
-        holder.txtUserComments.setText(commentsClass.getUser_comment());
-        holder.txtDateTime.setText(commentsClass.getDate_time());
+        Comment commentsClass = commentsClassList.get(position);
+        Log.d("Comments",commentsClass.getComment());
+        holder.txtUserNameComment.setText(commentsClass.getID());
+        holder.txtUserComments.setText(commentsClass.getComment());
+        holder.txtDateTime.setText(commentsClass.getTimeStamp());
     }
 
     @Override
     public int getItemCount() {
         return commentsClassList.size();
     }
+
+
 
     public class MyCommentViewHolder extends RecyclerView.ViewHolder{
 

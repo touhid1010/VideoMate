@@ -1,11 +1,9 @@
 package biz.vumobile.videomate.networking;
 
 
-import java.util.Map;
-
-import biz.vumobile.videomate.model.user.NewUserRegisterResult;
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
+import biz.vumobile.videomate.model.user.NewUserRegisterResult;
 import biz.vumobile.videomate.model.user.UserModel;
 import biz.vumobile.videomate.model.user.Userinfo;
 import biz.vumobile.videomate.utils.MyConstraints;
@@ -16,9 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 
 /**
  * Created by toukirul on 9/1/2018.

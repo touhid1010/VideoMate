@@ -18,7 +18,7 @@ import java.util.List;
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.AdapterGetAllPosts;
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
-import biz.vumobile.videomate.model.receivedata.Result;
+import biz.vumobile.videomate.model.receivedata.Video;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.RetrofitClient;
 import biz.vumobile.videomate.utils.MyConstraints;
@@ -43,7 +43,7 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private retrofit2.Call<GetAllPostsClass> getAllPostsClassCall;
-    private List<Result> resultList = new ArrayList<>();
+    private List<Video> resultList = new ArrayList<>();
     private ApiInterface apiInterface;
     private Fragment fragment;
 
@@ -86,7 +86,7 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onClick(View view, int position) {
                 Log.d("Click", "Clickable");
-                Result posts = resultList.get(position);
+                Video posts = resultList.get(position);
                 intent = new Intent(getActivity(), VideoViewActivity.class);
                 intent.putExtra("video_url", posts.getVideoUrl());
                 startActivity(intent);
@@ -114,7 +114,7 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
             public void onResponse(Call<GetAllPostsClass> call, Response<GetAllPostsClass> response) {
 
                 swipeRefreshLayout.setRefreshing(false);
-                resultList.addAll(response.body().getResult());
+                resultList.addAll(response.body().getVideos());
                 adapter.notifyDataSetChanged();
             }
 

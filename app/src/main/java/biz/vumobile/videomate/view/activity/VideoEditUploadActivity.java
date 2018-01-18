@@ -1,12 +1,13 @@
 package biz.vumobile.videomate.view.activity;
 
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -43,6 +44,7 @@ import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_PATH;
 
 public class VideoEditUploadActivity extends AppCompatActivity implements View.OnClickListener, ProgressRequestBody.UploadCallbacks {
 
+    private Intent intent;
     private static final String TAG = "VideoEditUploadActivity";
     VideoView videoView;
     ImageButton imageButtonClose;
@@ -184,6 +186,10 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
                     if (response.body().getResult().equals("Success")) {
                         circularProgressView.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "Video Uploaded Successfully...", Toast.LENGTH_LONG).show();
+
+                        intent = new Intent("upload.success");
+                        sendBroadcast(intent);
+
                         onBackPressed();
                     } else {
                         Toast.makeText(getApplicationContext(), "Please try again...", Toast.LENGTH_LONG).show();

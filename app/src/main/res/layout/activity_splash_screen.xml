@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/background_color_white"
     tools:context="biz.vumobile.videomate.view.activity.SplashScreenActivity">
 
     <ImageView
@@ -30,6 +30,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="VIDEO MATE"
+        android:textStyle="bold"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewAnimation"

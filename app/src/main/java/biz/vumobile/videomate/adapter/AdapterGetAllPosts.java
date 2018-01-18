@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import biz.vumobile.videomate.R;
-import biz.vumobile.videomate.model.receivedata.Result;
+import biz.vumobile.videomate.model.receivedata.Video;
 
 /**
  * Created by toukirul on 15/1/2018.
@@ -25,10 +25,10 @@ import biz.vumobile.videomate.model.receivedata.Result;
 public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.MyViewHolder> {
 
     private Context mContext;
-    private List<Result> resultList;
+    private List<Video> resultList;
     private Random mRandom = new Random();
 
-    public AdapterGetAllPosts(Context context, List<Result> list){
+    public AdapterGetAllPosts(Context context, List<Video> list){
         this.mContext = context;
         this.resultList = list;
     }
@@ -44,12 +44,12 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        Result result = resultList.get(position);
+        Video result = resultList.get(position);
         Log.d("Response","lol "+result.getDescription());
         holder.imgItem.getLayoutParams().height = getRandomIntInRange(300, 250);
         holder.imgItem.setBackgroundColor(getRandomHSVColor());
         holder.txtTitle.setText(result.getDescription());
-        Glide.with(mContext).load(result.getThumbnailUrl()).into(holder.imgItem);
+        Glide.with(mContext).load(result.getThumbnail()).into(holder.imgItem);
 
     }
 

@@ -86,7 +86,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: " + response.body());
 
                 if (response.body().getUserinfo().size() < 1){
-                    return;
+                    registerUserRequest();
                 }
                 Userinfo userinfo = response.body().getUserinfo().get(0);
 

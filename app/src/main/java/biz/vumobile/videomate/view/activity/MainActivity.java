@@ -24,6 +24,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.MyPagerAdapter;
 import biz.vumobile.videomate.utils.CallBackLatestData;
@@ -50,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initUI();
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(pagerAdapter);
@@ -88,11 +94,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.buttonHome:
                 removeFragment(fragmentMe);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 viewPager.setCurrentItem(1);
                 break;
 
@@ -113,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .add(containerViewId, fragment, fragmentTag)
                     .disallowAddToBackStack()
                     .commit();
+        } else {
+            removeFragment(fragmentMe);
         }
 
     }

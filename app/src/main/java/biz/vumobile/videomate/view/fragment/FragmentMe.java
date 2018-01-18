@@ -23,9 +23,9 @@ import java.util.List;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.MeMenuRecyclerAdapter;
-import biz.vumobile.videomate.login.UserSingleton;
 import biz.vumobile.videomate.model.user.MeMenuModel;
 import biz.vumobile.videomate.model.user.Userinfo;
+import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.SimpleDividerItemDecoration;
 
 /**
@@ -82,7 +82,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     }
 
     private void setUserInfoToUI() {
-        Userinfo userinfo = UserSingleton.getInstanceOfUserModel();
+        Userinfo userinfo = MyApplication.getInstanceOfUserModel();
 
 //        imageViewProfilePic = view.findViewById(R.id.imageViewProfilePic);
         Glide.with(getActivity()).load(userinfo.getEmail()).placeholder(R.drawable.user).into(imageViewProfilePic);
@@ -98,10 +98,10 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
 
         MeMenuModel meMenuModel = new MeMenuModel(R.drawable.ic_action_thumb_up, "Like us in facebook");
         MeMenuModel meMenuModel2 = new MeMenuModel(R.drawable.ic_action_feedback, "Feedback");
-        MeMenuModel meMenuModel3 = new MeMenuModel(R.drawable.ic_action_info, "Logout");
+     //   MeMenuModel meMenuModel3 = new MeMenuModel(R.drawable.ic_action_info, "Logout");
         meMenuModels.add(meMenuModel);
         meMenuModels.add(meMenuModel2);
-        meMenuModels.add(meMenuModel3);
+   //     meMenuModels.add(meMenuModel3);
 
         meMenuRecyclerAdapter.notifyDataSetChanged();
 
@@ -111,15 +111,15 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.linearLayoutVideoTab:
-
+                Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.linearLayoutFollowingTab:
-
+                Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.linearLayoutFollowerTab:
-
+                Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

@@ -13,12 +13,12 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.login.MyLoginOperation;
-import biz.vumobile.videomate.login.UserSingleton;
 import biz.vumobile.videomate.model.user.NewUserRegisterResult;
 import biz.vumobile.videomate.model.user.UserModel;
 import biz.vumobile.videomate.model.user.Userinfo;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.RetrofitClient;
+import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.MyConstraints;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -94,19 +94,19 @@ public class SplashScreenActivity extends AppCompatActivity {
                     userinfo.setName("User: " + userinfo.getID().toString());
                 }
 
-                UserSingleton.getInstanceOfUserModel().setName(userinfo.getName());
-                UserSingleton.getInstanceOfUserModel().setEmail(userinfo.getEmail());
-                UserSingleton.getInstanceOfUserModel().setPhone(userinfo.getPhone());
-                UserSingleton.getInstanceOfUserModel().setFblogin(userinfo.getFblogin());
-                UserSingleton.getInstanceOfUserModel().setAboutme(userinfo.getAboutme());
-                UserSingleton.getInstanceOfUserModel().setFollowers(userinfo.getFollowers());
-                UserSingleton.getInstanceOfUserModel().setFollowing(userinfo.getFollowing());
-                UserSingleton.getInstanceOfUserModel().setPassword(userinfo.getPassword());
-                UserSingleton.getInstanceOfUserModel().setTimeStamp(userinfo.getTimeStamp());
-                UserSingleton.getInstanceOfUserModel().setImageUrl(userinfo.getImageUrl());
-                UserSingleton.getInstanceOfUserModel().setGender(userinfo.getGender());
-                UserSingleton.getInstanceOfUserModel().setID(userinfo.getID());
-                UserSingleton.getInstanceOfUserModel().setTotalUploadedVideo(userinfo.getTotalUploadedVideo());
+                MyApplication.getInstanceOfUserModel().setName(userinfo.getName());
+                MyApplication.getInstanceOfUserModel().setEmail(userinfo.getEmail());
+                MyApplication.getInstanceOfUserModel().setPhone(userinfo.getPhone());
+                MyApplication.getInstanceOfUserModel().setFblogin(userinfo.getFblogin());
+                MyApplication.getInstanceOfUserModel().setAboutme(userinfo.getAboutme());
+                MyApplication.getInstanceOfUserModel().setFollowers(userinfo.getFollowers());
+                MyApplication.getInstanceOfUserModel().setFollowing(userinfo.getFollowing());
+                MyApplication.getInstanceOfUserModel().setPassword(userinfo.getPassword());
+                MyApplication.getInstanceOfUserModel().setTimeStamp(userinfo.getTimeStamp());
+                MyApplication.getInstanceOfUserModel().setImageUrl(userinfo.getImageUrl());
+                MyApplication.getInstanceOfUserModel().setGender(userinfo.getGender());
+                MyApplication.getInstanceOfUserModel().setID(userinfo.getID());
+                MyApplication.getInstanceOfUserModel().setTotalUploadedVideo(userinfo.getTotalUploadedVideo());
 
                 startMainActivity();
 

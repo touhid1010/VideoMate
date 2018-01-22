@@ -11,7 +11,7 @@ public class MyConstraints {
     public static final String FRAGMENT_TAG_ME = "FragmentMe";
 
     public static final String API_BASE = "http://wap.shabox.mobi/VUMate/";
-    public static final String GET_ALL_POSTS = "api/post/getpost";
+    public static final String GET_ALL_POSTS = "api/post/getpost"; // http://wap.shabox.mobi/VUMate/api/post/getpost?id=26
     public static final String API_POST_DATA = "api/post/Postup";
     public static final String API_GIVE_LIKE = "api/Post/PostLike";
     public static final String POST_COMMENT = "api/Post/PostComment";
@@ -27,7 +27,6 @@ public class MyConstraints {
     // Shared pref
     public static final String SHAR_PREF_NAME_USER = "pref_name_user";
     public static final String SHAR_PREF_USER_ID = "user_id";
-
 
 
 }

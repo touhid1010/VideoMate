@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void getUserDataForSingleton(Userinfo userinfo) {
+    public void getUserDataForSingleton(final Userinfo userinfo) {
 
         userModelCall = apiInterface.updateUserWithFbInfo(userinfo);
 
@@ -152,10 +152,15 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response.body().getResult().equals("success")) {
                     Toast.makeText(LoginActivity.this, "FB login success", Toast.LENGTH_SHORT).show();
+
+                    // set data to singleton to ensure upload at first time
+                    MyApplication.getInstanceOfUserModel().setImageUrl(userinfo.getImageUrl());
+                    MyApplication.getInstanceOfUserModel().setName(userinfo.getName());
+                    MyApplication.getInstanceOfUserModel().setFblogin(userinfo.getFblogin());
+
+
                     finish();
                 }
-
-
 
             }
 

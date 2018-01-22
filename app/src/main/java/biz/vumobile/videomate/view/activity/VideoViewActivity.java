@@ -47,7 +47,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     private ImageView imgUserImage;
     private Intent shareIntent;
     private Intent intent;
-    private TextView txtLikeCount, txtCommentCount, txtViews;
+    private TextView txtLikeCount, txtCommentCount, txtViews, txtUserName;
     private FragmentManager fragmentManager;
     private VideoView videoView;
     private ImageView imgClose, imgComment, imgLoading, imgShare, imglike, imgFollow;
@@ -57,8 +57,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     private List<Comment> commentsClassList = new ArrayList<>();
     private Uri uri;
     public static int like_count, view_count;
-    public static String video_id, opponentId;
-    private String videoUrl;// = "http://wap.shabox.mobi/CMS/Content/Graphics/Video%20Clips/D480x320/2018_1.mp4";
+    public static String video_id, opponentId, video_url, user_photo, user_name;
+    private String videoUrl; // = "http://wap.shabox.mobi/CMS/Content/Graphics/Video%20Clips/D480x320/2018_1.mp4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +68,10 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         initUI();
 
         Glide.with(getApplicationContext()).load(R.drawable.loading).into(imgLoading);
+        Glide.with(this).load(user_photo).placeholder(R.drawable.user).into(imgUserImage);
+        txtUserName.setText(user_name);
 
-        fragmentMe = new FragmentMe();
+//        fragmentMe = new FragmentMe();
         fragmentManager = getSupportFragmentManager();
 
         uri = Uri.parse(videoUrl);
@@ -85,7 +87,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 mediaPlayer.start();
                 mediaPlayer.setLooping(true);
 
-                if (mediaPlayer.isPlaying()){
+                if (mediaPlayer.isPlaying()) {
                     imgLoading.setVisibility(View.GONE);
                 }
             }
@@ -99,29 +101,28 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         likeClassCall.enqueue(new Callback<LikeClass>() {
             @Override
             public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
-                Log.d("Response","Viewed "+response.body().getResult());
-                view_count+=1;
+                Log.d("Response", "Viewed " + response.body().getResult());
+                view_count += 1;
                 int views = view_count;
                 txtViews.setText(String.valueOf(views));
             }
 
             @Override
             public void onFailure(Call<LikeClass> call, Throwable t) {
-                Log.d("Response","Viewed "+t.getMessage());
+                Log.d("Response", "Viewed " + t.getMessage());
             }
         });
     }
 
     private void initUI() {
 
-        // this used for hide top status bar
-        getWindow().clearFlags(WindowManager
-                .LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // This used for hide top status bar
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         imgFollow = findViewById(R.id.imgFollow);
         txtViews = findViewById(R.id.txtViews);
+        txtUserName = findViewById(R.id.txtUserName);
         txtCommentCount = findViewById(R.id.txtCommentCount);
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imglike = findViewById(R.id.imglikee);
@@ -131,11 +132,11 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imgUserImage = findViewById(R.id.imgUserImage);
-        imgShare = (ImageView) findViewById(R.id.imgShare);
-        imgLoading = (ImageView) findViewById(R.id.imgLoading);
-        videoView = (VideoView) findViewById(R.id.videoView);
-        imgClose = (ImageView) findViewById(R.id.imgClose);
-        imgComment = (ImageView) findViewById(R.id.imgComment);
+        imgShare = findViewById(R.id.imgShare);
+        imgLoading = findViewById(R.id.imgLoading);
+        videoView = findViewById(R.id.videoView);
+        imgClose = findViewById(R.id.imgClose);
+        imgComment = findViewById(R.id.imgComment);
 
         imgFollow.setOnClickListener(this);
         imglike.setOnClickListener(this);
@@ -151,31 +152,36 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View view) {
 
-        switch (view.getId()){
+        switch (view.getId()) {
 
             case R.id.imgClose:
-                if (!videoView.isPlaying()){
+                if (!videoView.isPlaying()) {
                     finish();
-                }else {
+                } else {
                     videoView.stopPlayback();
                     finish();
                 }
                 break;
+
             case R.id.imgComment:
                 openFragment(new FragmentCommentViews());
                 break;
+
             case R.id.imgShare:
                 shareContent();
                 break;
+
             case R.id.imgUserImage:
                 // go to user profile
-                addFragment(R.id.framelayoutProfile, fragmentMe, FRAGMENT_TAG_ME);
+           //     addFragment(R.id.framelayoutProfile, fragmentMe, FRAGMENT_TAG_ME);
                 break;
+
             case R.id.imglikee:
-                like_count+=1;
+                like_count += 1;
                 txtLikeCount.setText(String.valueOf(like_count));
                 giveLike(video_id);
                 break;
+
             case R.id.imgFollow:
                 followUser(MyLoginOperation.getInstance(this).getUserId(), opponentId);
                 break;
@@ -185,8 +191,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     private void followUser(String userId, String opponentId) {
 
         HashMap<String, String> map = new HashMap<>();
-        map.put("UserId",userId);
-        map.put("FollowedUserId",opponentId);
+        map.put("UserId", userId);
+        map.put("FollowedUserId", opponentId);
 
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
         likeClassCall = apiInterface.followUser(map);
@@ -194,13 +200,20 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         likeClassCall.enqueue(new Callback<LikeClass>() {
             @Override
             public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
-                Log.d("Response","Follow "+response.body().getResult());
-                Toast.makeText(getApplicationContext(), response.body().getResult(), Toast.LENGTH_LONG).show();
+                if (response == null) {
+                    return;
+                }
+                if (response.body().getResult() == null) {
+                    return;
+                }
+                imgFollow.setVisibility(View.GONE);
+                Log.d("Response", "Follow " + response.body().getResult());
+              //  Toast.makeText(getApplicationContext(), response.body().getResult(), Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFailure(Call<LikeClass> call, Throwable t) {
-                Log.d("Response","Follow "+t.getMessage());
+                Log.d("Response", "Follow " + t.getMessage());
             }
         });
     }
@@ -214,29 +227,30 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         likeClassCall.enqueue(new Callback<LikeClass>() {
             @Override
             public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
-                Log.d("ResponseLike",response.body().getResult());
+                Log.d("ResponseLike", response.body().getResult());
             }
 
             @Override
             public void onFailure(Call<LikeClass> call, Throwable t) {
-                Log.d("ResponseLike",t.getMessage());
+                Log.d("ResponseLike", t.getMessage());
             }
         });
 
     }
 
-    private void addFragment(@IdRes int containerViewId,
-                             @NonNull Fragment fragment,
-                             @NonNull String fragmentTag) {
-        Fragment fragmentA = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ME);
-        if (fragmentA == null) {
-            fragmentManager
-                    .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
-                    .add(containerViewId, fragment, fragmentTag)
-                    .disallowAddToBackStack()
-                    .commit();
-        }
-    }
+//    private void addFragment(@IdRes int containerViewId,
+//                             @NonNull Fragment fragment,
+//                             @NonNull String fragmentTag) {
+//        Fragment fragmentA = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ME);
+//        if (fragmentA == null) {
+//            fragmentManager
+//                    .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
+//                    .add(containerViewId, fragment, fragmentTag)
+//                    .disallowAddToBackStack()
+////                    .addToBackStack("df")
+//                    .commit();
+//        }
+//    }
 
     private void shareContent() {
         shareIntent = new Intent();
@@ -268,7 +282,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    public void getAllCommentsCount(String video_id){
+    public void getAllCommentsCount(String video_id) {
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
         commentClassCall = apiInterface.getComments(video_id);
 

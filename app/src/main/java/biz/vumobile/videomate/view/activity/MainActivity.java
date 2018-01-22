@@ -29,6 +29,7 @@ import com.facebook.appevents.AppEventsLogger;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.MyPagerAdapter;
+import biz.vumobile.videomate.login.MyLoginOperation;
 import biz.vumobile.videomate.utils.CallBackLatestData;
 import biz.vumobile.videomate.view.fragment.FragmentMe;
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(1);
 
-        // tab layout
+        // Tab layout
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("upload.success")){
+            if (intent.getAction().equals("upload.success")) {
                 viewPager.setCurrentItem(2);
                 // TODO
 //                intent = new Intent("load.latest");
@@ -222,14 +223,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("LifeCycle","resume");
+        Log.d("LifeCycle", "resume");
+
+        // Reload user data after fb login
+        if (!MyLoginOperation.getInstance(this).getUserId().equals("")) {
+            MyLoginOperation.getInstance(this).getUserDataForSingleton(MyLoginOperation.getInstance(this).getUserId());
+        }
+
+        // Reload video grid data after upload video
+
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         removeFragment(fragmentMe);
-        Log.d("LifeCycle","pause");
+        Log.d("LifeCycle", "pause");
     }
 
     @Override

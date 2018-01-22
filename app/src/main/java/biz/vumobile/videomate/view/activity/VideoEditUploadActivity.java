@@ -244,5 +244,15 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.start();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        videoView.pause();
+    }
 }

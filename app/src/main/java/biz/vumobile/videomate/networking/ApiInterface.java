@@ -48,11 +48,11 @@ public interface ApiInterface {
     @GET(MyConstraints.API_GET_USER)
     Call<UserModel> getUserById(@Query("id") String uId);
 
-    @POST(MyConstraints.API_POST_UPDATE)
+    @POST(MyConstraints.API_POST_UPDATE) // after fb login
     Call<UpdateUserResult> updateUserWithFbInfo(@Body Userinfo userinfo);
 
     @GET(MyConstraints.GET_ALL_POSTS)
-    Call<GetAllPostsClass> getPosts();
+    Call<GetAllPostsClass> getPosts(@Query("id") String id);
 
     @Multipart
     @POST(MyConstraints.API_POST_DATA)

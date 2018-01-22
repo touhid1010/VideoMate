@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,6 +51,8 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     MeMenuRecyclerAdapter meMenuRecyclerAdapter;
     LinearLayout linearLayoutVideoTab, linearLayoutFollowingTab, linearLayoutFollowerTab;
 
+    CardView cardView;
+
     ImageButton imageButtonFacebookConnect;
     ImageView imageViewProfilePic;
     TextView textViewUserName, textViewUserId, textViewVideoCount, textViewFollowingCount, textViewFollowerCount;
@@ -72,6 +75,8 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
         textViewVideoCount = view.findViewById(R.id.textViewVideoCount);
         textViewFollowingCount = view.findViewById(R.id.textViewFollowingCount);
         textViewFollowerCount = view.findViewById(R.id.textViewFollowerCount);
+
+        cardView = view.findViewById(R.id.cardView);
 
         linearLayoutVideoTab = view.findViewById(R.id.linearLayoutVideoTab);
         linearLayoutFollowingTab = view.findViewById(R.id.linearLayoutFollowingTab);
@@ -98,6 +103,12 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     }
 
     private void setUserInfoToUI() {
+
+        // invisible fb login part if already logged in
+        if (MyApplication.getInstanceOfUserModel().getFblogin() == 1) {
+            cardView.setVisibility(View.INVISIBLE);
+        }
+
         Userinfo userinfo = MyApplication.getInstanceOfUserModel();
 
 //        imageViewProfilePic = view.findViewById(R.id.imageViewProfilePic);
@@ -127,15 +138,15 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.linearLayoutVideoTab:
-              //  Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.linearLayoutFollowingTab:
-             //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.linearLayoutFollowerTab:
-             //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.imageButtonFacebookConnect:
@@ -179,7 +190,6 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
         emailIntent.putExtra(Intent.EXTRA_TEXT, "Dear concern, ");
         context.startActivity(Intent.createChooser(emailIntent, "Send email..."));
     }
-
 
 
 }

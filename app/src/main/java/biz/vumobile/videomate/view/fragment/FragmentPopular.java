@@ -17,6 +17,7 @@ import java.util.List;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.AdapterGetAllPosts;
+import biz.vumobile.videomate.login.MyLoginOperation;
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
 import biz.vumobile.videomate.model.receivedata.Video;
 import biz.vumobile.videomate.networking.ApiInterface;
@@ -94,6 +95,10 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
                 VideoViewActivity.view_count = posts.getView();
                 VideoViewActivity.opponentId = posts.getUser().getUserID();
 
+                VideoViewActivity.video_url = posts.getVideoUrl();
+                VideoViewActivity.user_photo = posts.getUser().getImageUrl().toString();
+                VideoViewActivity.user_name = posts.getUser().getUserName().toString();
+
                 intent = new Intent(getActivity(), VideoViewActivity.class);
                 intent.putExtra("video_url", posts.getVideoUrl());
                 startActivity(intent);
@@ -114,7 +119,7 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
 
         resultList.clear();
 
-        getAllPostsClassCall = apiInterface.getPosts();
+        getAllPostsClassCall = apiInterface.getPosts(MyLoginOperation.getInstance(getActivity()).getUserId());
 
         getAllPostsClassCall.enqueue(new Callback<GetAllPostsClass>() {
             @Override

@@ -39,3 +39,4 @@
         app:layout_constraintBottom_toBottomOf="@+id/surfaceView" />
 
 </android.support.constraint.ConstraintLayout>
+

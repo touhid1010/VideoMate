@@ -30,6 +30,9 @@ public class Video {
     @SerializedName("View")
     @Expose
     private Integer view;
+    @SerializedName("Follow")
+    @Expose
+    private Integer Follow;
 
     public Integer getView() {
         return view;
@@ -95,4 +98,11 @@ public class Video {
         this.comment = comment;
     }
 
+    public Integer getFollow() {
+        return Follow;
+    }
+
+    public void setFollow(Integer follow) {
+        Follow = follow;
+    }
 }

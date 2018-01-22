@@ -17,6 +17,7 @@ import java.util.List;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.AdapterGetAllPosts;
+import biz.vumobile.videomate.login.MyLoginOperation;
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
 import biz.vumobile.videomate.model.receivedata.Video;
 import biz.vumobile.videomate.networking.ApiInterface;
@@ -32,7 +33,7 @@ import retrofit2.Response;
  * Created by IT-10 on 1/14/2018.
  */
 
-public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -44,6 +45,8 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
     private ApiInterface apiInterface;
     private Call<GetAllPostsClass> callLatest;
     private List<Video> latestListVideo = new ArrayList<>();
+
+
 
     @Nullable
     @Override
@@ -109,7 +112,7 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
 
         latestListVideo.clear();
 
-        callLatest = apiInterface.getPosts();
+        callLatest = apiInterface.getPosts(MyLoginOperation.getInstance(getActivity()).getUserId());
 
         callLatest.enqueue(new Callback<GetAllPostsClass>() {
             @Override

@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import biz.vumobile.videomate.model.receivedata.CommentsClass;
 import biz.vumobile.videomate.model.receivedata.GetAllPostsClass;
+import biz.vumobile.videomate.model.receivedata.audio.AudioModel;
+import biz.vumobile.videomate.model.receivedata.audiocat.AudioCatModel;
 import biz.vumobile.videomate.model.senddata.LikeClass;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
 import biz.vumobile.videomate.model.user.NewUserRegisterResult;
@@ -51,8 +53,20 @@ public interface ApiInterface {
     @POST(MyConstraints.API_POST_UPDATE) // after fb login
     Call<UpdateUserResult> updateUserWithFbInfo(@Body Userinfo userinfo);
 
-    @GET(MyConstraints.GET_ALL_POSTS)
-    Call<GetAllPostsClass> getPosts(@Query("id") String id);
+    @GET(MyConstraints.GET_ALL_POSTS_FOLLOW)
+    Call<GetAllPostsClass> getPostsFollowed(@Query("id") String id);
+
+    @GET(MyConstraints.GET_ALL_POSTS_LATEST)
+    Call<GetAllPostsClass> getPostsLatest(@Query("id") String id);
+
+    @GET(MyConstraints.GET_ALL_POSTS_POPULAR)
+    Call<GetAllPostsClass> getPostsPopular(@Query("id") String id);
+
+    @GET(MyConstraints.API_GET_AUDIO_CAT)
+    Call<AudioCatModel> getAudioCatList();
+
+    @GET(MyConstraints.API_GET_AUDIO)
+    Call<AudioModel> getAudioList(@Query("id") String id);
 
     @Multipart
     @POST(MyConstraints.API_POST_DATA)

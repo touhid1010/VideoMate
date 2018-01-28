@@ -13,25 +13,22 @@
         android:id="@+id/cameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:keepScreenOn="true" >
+        android:keepScreenOn="true">
 
     </com.otaliastudios.cameraview.CameraView>
-
 
     <ProgressBar
         android:id="@+id/progressBarTimer"
         style="@style/MyProgressBar"
         android:layout_width="match_parent"
-        android:max="15"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:max="15" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignBottom="@+id/cameraView"
         android:gravity="bottom">
-
-
 
         <ImageButton
             android:id="@+id/imageButtonRecord"
@@ -56,23 +53,64 @@
 
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/imageButtonSwitchCamera"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="30dp"
-        android:background="#00000000"
-        android:padding="6dp"
-        android:src="@drawable/ic_action_camera_front" />
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/imageButtonSwitchCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="30dp"
+            android:background="#00000000"
+            android:padding="6dp"
+            android:src="@drawable/ic_action_camera_front" />
+
+        <ImageButton
+            android:id="@+id/imageButtonMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="#00000000"
+            android:paddingBottom="0dp"
+            android:paddingEnd="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingStart="6dp"
+            android:paddingTop="6dp"
+            android:src="@drawable/ic_action_music" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Music"
+            android:textColor="@color/background_color_white"
+            android:textSize="11sp" />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/imageButtonCameraClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="30dp"
         android:background="#00000000"
         android:padding="6dp"
         app:srcCompat="@drawable/ic_action_close" />
+
+    <FrameLayout
+        android:id="@+id/frameLayoutAddAudio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp" />
 
 </RelativeLayout>

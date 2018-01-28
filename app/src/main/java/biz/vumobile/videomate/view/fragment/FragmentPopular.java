@@ -97,12 +97,30 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
 
                 VideoViewActivity.video_url = posts.getVideoUrl();
                 VideoViewActivity.user_photo = posts.getUser().getImageUrl().toString();
-                VideoViewActivity.user_name = posts.getUser().getUserName().toString();
+                VideoViewActivity.user_name = posts.getUser().getUserName();
 
                 intent = new Intent(getActivity(), VideoViewActivity.class);
-                intent.putExtra("video_url", posts.getVideoUrl());
+//                intent.putExtra("video_url", posts.getVideoUrl());
+
+                intent.putExtra("position", position);
+                VideoViewActivity.videoList.clear();
+                for (int a = 0; a < resultList.size(); a++) {
+                    VideoViewActivity.videoList.addAll(resultList);
+                }
                 startActivity(intent);
-                //startActivity(new Intent(getActivity(), VideoViewActivity.class));
+
+
+
+
+//                startActivity(new Intent(getActivity(), VideoViewActivity.class));
+
+//                Intent i = new Intent(getActivity(), VideoPagerActivity.class);
+//                for (int a = 0; a < resultList.size(); a++) {
+//                    VideoPagerActivity.list.add(resultList.get(a).getVideoUrl());
+//                }
+//
+//                i.putExtra("", "");
+//                startActivity(i);
 
             }
 
@@ -119,7 +137,7 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
 
         resultList.clear();
 
-        getAllPostsClassCall = apiInterface.getPosts(MyLoginOperation.getInstance(getActivity()).getUserId());
+        getAllPostsClassCall = apiInterface.getPostsPopular(MyLoginOperation.getInstance(getActivity()).getUserId());
 
         getAllPostsClassCall.enqueue(new Callback<GetAllPostsClass>() {
             @Override
@@ -136,7 +154,7 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
             }
         });
 
-//        allPostsClassCall = apiInterface.getPosts();
+//        allPostsClassCall = apiInterface.getPostsLatest();
 //
 //        allPostsClassCall.enqueue(new Callback<GetAllPostsClass>() {
 //            @Override

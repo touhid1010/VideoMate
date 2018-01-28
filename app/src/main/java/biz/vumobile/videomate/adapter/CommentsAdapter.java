@@ -50,8 +50,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyComm
         return commentsClassList.size();
     }
 
-
-
     public class MyCommentViewHolder extends RecyclerView.ViewHolder{
 
         private TextView txtUserNameComment, txtUserComments, txtDateTime;

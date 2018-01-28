@@ -48,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
 
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
 
-
     }
 
     private void facebookLoginUiAndOperation() {

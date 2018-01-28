@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Random;
@@ -42,8 +43,8 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
     }
 
     Random r = new Random();
-    int start = 600;
-    int end = 470;
+    int start = 700;
+    int end = 600;
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
@@ -58,6 +59,7 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
         holder.txtViewsCount.setText(String.valueOf(result.getView()));
         Glide.with(mContext).load(result.getThumbnail()).into(holder.imgItem);
         Glide.with(mContext).load(result.getUser().getImageUrl()).placeholder(R.drawable.user).into(holder.imgUser);
+
 
     }
 

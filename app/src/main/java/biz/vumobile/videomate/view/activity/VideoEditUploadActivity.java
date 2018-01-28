@@ -18,11 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.coremedia.iso.boxes.Container;
 import com.github.guilhe.circularprogressview.CircularProgressView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.googlecode.mp4parser.authoring.Movie;
+import com.googlecode.mp4parser.authoring.Track;
+import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
+import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.util.concurrent.TimeUnit;
 
 import biz.vumobile.videomate.R;
@@ -40,6 +48,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static biz.vumobile.videomate.utils.MyConstraints.AUDIO_PATH;
+import static biz.vumobile.videomate.utils.MyConstraints.FILE_PATH;
 import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_PATH;
 
 public class VideoEditUploadActivity extends AppCompatActivity implements View.OnClickListener, ProgressRequestBody.UploadCallbacks {
@@ -50,7 +60,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
     ImageButton imageButtonClose;
     Button buttonPost;
     EditText editTextDescription;
-    String videoPath;
+    String videoPath, audioPath, outputFilePath = "";
     CircularProgressView circularProgressView;
     TextView textViewUploadPercentage;
 
@@ -79,7 +89,14 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
         });
 
         if (getIntent() != null) {
+            audioPath = getIntent().getStringExtra(AUDIO_PATH);
             videoPath = getIntent().getStringExtra(VIDEO_PATH);
+        }
+
+        // Marge audio and video
+        if (!audioPath.equals("")) {
+            outputFilePath = mixVA(videoPath, audioPath);
+        } else {
             videoView.setVideoPath(videoPath);
             videoView.start();
         }
@@ -99,6 +116,9 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
                     return;
                 }
                 hideKeypad();
+                if (!outputFilePath.equals("")) {
+                    videoPath = outputFilePath;
+                }
                 uploadFile(videoPath, editTextDescription.getText().toString(), String.valueOf(MyApplication.getInstanceOfUserModel().getID()) + "");
                 break;
         }
@@ -132,7 +152,7 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
 //
 //        }
 //    }
-//
+
 
     private String getRealPathFromURI(Uri contentUri) {
         String[] proj = {MediaStore.Video.Media.DATA};
@@ -255,4 +275,68 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
         super.onPause();
         videoView.pause();
     }
+
+
+    /*
+   * @param videoFile path to video file
+   * @param audioFile path to audiofile
+   */
+    String filePath = "";
+
+    public String mixVA(final String videoFile, final String audioFile) {
+
+        Movie video = null;
+        try {
+            video = new MovieCreator().build(videoFile);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        Movie audio = null;
+        try { // audioFile
+            audio = new MovieCreator().build(audioFile); //  filePath = MyConstraints.FILE_PATH + "La Isla Bonita By Alezee.mp4";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (NullPointerException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+        int size = audio.getTracks().size();
+        Track audioTrack = audio.getTracks().get((size - 1));
+        video.addTrack(audioTrack);
+
+        Container out = new DefaultMp4Builder().build(video);
+
+        File myDirectory = new File(MyConstraints.FILE_PATH + "/VIDEO/"); // Environment.getExternalStorageDirectory(), "/VideoMate"
+        if (!myDirectory.exists()) {
+            myDirectory.mkdirs();
+        }
+        filePath = myDirectory + "" + System.currentTimeMillis() + ".mp4";
+
+        try {
+            RandomAccessFile ram = new RandomAccessFile(String.format(filePath), "rw");
+            FileChannel fc = ram.getChannel();
+            out.writeContainer(fc);
+            ram.close();
+
+            // Play video after merging
+            videoView.setVideoPath(filePath);
+            videoView.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (filePath == null) {
+            return "";
+        }
+        return filePath;
+//        return "";
+    }
+
 }

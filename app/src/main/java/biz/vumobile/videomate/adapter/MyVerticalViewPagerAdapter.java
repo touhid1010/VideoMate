@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.List;
 
 import biz.vumobile.videomate.view.fragment.FragmentLatest;
+import biz.vumobile.videomate.view.fragment.VideoPlayerFragment;
 
 /**
  * Created by IT-10 on 1/22/2018.
@@ -26,7 +27,7 @@ public class MyVerticalViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        fragment = new FragmentLatest();
+        fragment = new VideoPlayerFragment();
         Bundle bundle = new Bundle();
         bundle.putString("key", fragments.get(position));
         fragment.setArguments(bundle);

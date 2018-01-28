@@ -30,6 +30,7 @@ import biz.vumobile.videomate.model.user.Userinfo;
 import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.SimpleDividerItemDecoration;
 import biz.vumobile.videomate.view.activity.LoginActivity;
+import biz.vumobile.videomate.view.activity.MainActivity;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -150,10 +151,12 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
                 break;
 
             case R.id.imageButtonFacebookConnect:
+
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 break;
         }
     }
+
 
 
     @Override // recyclerView

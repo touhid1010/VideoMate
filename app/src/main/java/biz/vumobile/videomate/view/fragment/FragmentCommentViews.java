@@ -142,7 +142,7 @@ public class FragmentCommentViews extends Fragment {
                 commentsClass.setID(video_id);
 
                 commentsClassList.add(commentsClass);
-                txtCommentCount.setText(String.valueOf(commentsClassList.size())+" comments");
+                txtCommentCount.setText(String.valueOf(commentsClassList.size()) + " comments");
                 adapter.notifyDataSetChanged();
             }
 
@@ -154,7 +154,7 @@ public class FragmentCommentViews extends Fragment {
     }
 
     public void getAllComment(String videoId) {
-        Log.d("Response",videoId);
+        Log.d("Response", videoId);
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
         likeClassCall = apiInterface.getComments(videoId);
 
@@ -162,13 +162,13 @@ public class FragmentCommentViews extends Fragment {
             @Override
             public void onResponse(Call<CommentsClass> call, Response<CommentsClass> response) {
                 commentsClassList.addAll(response.body().getComments());
-                txtCommentCount.setText(String.valueOf(commentsClassList.size())+" comments");
+                txtCommentCount.setText(String.valueOf(commentsClassList.size()) + " comments");
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<CommentsClass> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
     }

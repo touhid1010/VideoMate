@@ -71,6 +71,7 @@
         <activity
             android:name=".view.activity.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".view.activity.VideoPagerActivity"></activity>
     </application>
 
 </manifest>

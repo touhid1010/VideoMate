@@ -47,7 +47,6 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
     private List<Video> latestListVideo = new ArrayList<>();
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,13 +73,11 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-
                 swipeRefreshLayout.setRefreshing(true);
 
                 parseContent(apiInterface);
             }
         });
-
 
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
@@ -94,7 +91,12 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
                 VideoViewActivity.view_count = posts.getView();
 
                 intent = new Intent(getActivity(), VideoViewActivity.class);
-                intent.putExtra("video_url", posts.getVideoUrl());
+//                intent.putExtra("video_url", posts.getVideoUrl());
+                intent.putExtra("position", position);
+                VideoViewActivity.videoList.clear();
+                for (int a = 0; a < latestListVideo.size(); a++) {
+                    VideoViewActivity.videoList.addAll(latestListVideo);
+                }
                 startActivity(intent);
                 //startActivity(new Intent(getActivity(), VideoViewActivity.class));
             }
@@ -106,22 +108,15 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
         }));
     }
 
-    private void parseContent(ApiInterface apiInterface) {
-
+    public void parseContent(ApiInterface apiInterface) {
         swipeRefreshLayout.setRefreshing(true);
-
         latestListVideo.clear();
-
-        callLatest = apiInterface.getPosts(MyLoginOperation.getInstance(getActivity()).getUserId());
-
+        callLatest = apiInterface.getPostsLatest(MyLoginOperation.getInstance(getActivity()).getUserId());
         callLatest.enqueue(new Callback<GetAllPostsClass>() {
             @Override
             public void onResponse(Call<GetAllPostsClass> call, Response<GetAllPostsClass> response) {
-
                 swipeRefreshLayout.setRefreshing(false);
-
                 latestListVideo.addAll(response.body().getVideos());
-
                 adapter.notifyDataSetChanged();
             }
 
@@ -160,7 +155,6 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override

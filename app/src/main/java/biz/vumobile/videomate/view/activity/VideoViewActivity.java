@@ -15,10 +15,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,17 +28,19 @@ import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.login.MyLoginOperation;
 import biz.vumobile.videomate.model.receivedata.Comment;
 import biz.vumobile.videomate.model.receivedata.CommentsClass;
+import biz.vumobile.videomate.model.receivedata.Video;
 import biz.vumobile.videomate.model.senddata.LikeClass;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.RetrofitClient;
 import biz.vumobile.videomate.utils.MyConstraints;
+import biz.vumobile.videomate.utils.OnSwipeTouchListener;
 import biz.vumobile.videomate.view.fragment.FragmentCommentViews;
-import biz.vumobile.videomate.view.fragment.FragmentMe;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static biz.vumobile.videomate.utils.MyConstraints.FRAGMENT_TAG_ME;
+import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_POSITION;
 
 public class VideoViewActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,7 +48,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     private Fragment fragmentMe;
     private ImageView imgUserImage;
     private Intent shareIntent;
-    private Intent intent;
     private TextView txtLikeCount, txtCommentCount, txtViews, txtUserName;
     private FragmentManager fragmentManager;
     private VideoView videoView;
@@ -55,10 +56,14 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     private Call<LikeClass> likeClassCall;
     private Call<CommentsClass> commentClassCall;
     private List<Comment> commentsClassList = new ArrayList<>();
+    public static List<Video> videoList = new ArrayList<>();
     private Uri uri;
     public static int like_count, view_count;
     public static String video_id, opponentId, video_url, user_photo, user_name;
-    private String videoUrl; // = "http://wap.shabox.mobi/CMS/Content/Graphics/Video%20Clips/D480x320/2018_1.mp4";
+    private int position; // = "http://wap.shabox.mobi/CMS/Content/Graphics/Video%20Clips/D480x320/2018_1.mp4";
+
+    // NEW
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +73,14 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         initUI();
 
         Glide.with(getApplicationContext()).load(R.drawable.loading).into(imgLoading);
-        Glide.with(this).load(user_photo).placeholder(R.drawable.user).into(imgUserImage);
-        txtUserName.setText(user_name);
+//        Glide.with(this).load(user_photo).placeholder(R.drawable.user).into(imgUserImage);
+//        txtUserName.setText(user_name);
 
 //        fragmentMe = new FragmentMe();
         fragmentManager = getSupportFragmentManager();
+        position = getIntent().getIntExtra(VIDEO_POSITION, 0);
 
-        uri = Uri.parse(videoUrl);
+        uri = Uri.parse(videoList.get(position).getVideoUrl());
         videoView.setVideoURI(uri);
 
         getAllCommentsCount(video_id);
@@ -88,11 +94,14 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 mediaPlayer.setLooping(true);
 
                 if (mediaPlayer.isPlaying()) {
-                    imgLoading.setVisibility(View.GONE);
+                    imgLoading.setVisibility(View.INVISIBLE);
                 }
             }
         });
-    }
+
+        setDataToView();
+
+    }// end of onCreate
 
     private void setView(String video_id) {
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
@@ -126,9 +135,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         txtCommentCount = findViewById(R.id.txtCommentCount);
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imglike = findViewById(R.id.imglikee);
-        intent = getIntent();
-
-        videoUrl = intent.getStringExtra("video_url");
 
         txtLikeCount = findViewById(R.id.txtLikeCount);
         imgUserImage = findViewById(R.id.imgUserImage);
@@ -147,6 +153,57 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
         txtViews.setText(String.valueOf(view_count));
         txtLikeCount.setText(String.valueOf(like_count));
+
+        videoView.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeTop() {
+                super.onSwipeTop();
+
+                position++;
+                setDataToView();
+
+            }
+
+            @Override
+            public void onSwipeBottom() {
+                super.onSwipeBottom();
+
+                position--;
+                setDataToView();
+
+            }
+        });
+
+    }
+
+    public void setDataToView() {
+
+        imgLoading.setVisibility(View.VISIBLE);
+
+        if (position > videoList.size()) {
+            position = 0;
+        } else if (position < 0) {
+            position = videoList.size();
+        }
+        Video videoObj = videoList.get(position);
+        uri = Uri.parse(videoObj.getVideoUrl());
+        videoView.setVideoURI(uri);
+        txtUserName.setText(videoObj.getUser().getUserName());
+        txtLikeCount.setText(String.valueOf(videoObj.getLike()));
+        txtCommentCount.setText(String.valueOf(videoObj.getComment()));
+        txtViews.setText(String.valueOf(videoObj.getView()));
+        Log.d("ttt", "setDataToViewAfterSwipe: " + videoObj.getUser().getImageUrl());
+        Glide.with(this).load(videoObj.getUser().getImageUrl())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(R.drawable.user).into(imgUserImage);
+
+        if (videoObj.getFollow() == 0) {
+            imgFollow.setVisibility(View.VISIBLE);
+        } else {
+            imgFollow.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     @Override
@@ -173,7 +230,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.imgUserImage:
                 // go to user profile
-           //     addFragment(R.id.framelayoutProfile, fragmentMe, FRAGMENT_TAG_ME);
+                //     addFragment(R.id.framelayoutProfile, fragmentMe, FRAGMENT_TAG_ME);
                 break;
 
             case R.id.imglikee:
@@ -208,7 +265,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 }
                 imgFollow.setVisibility(View.GONE);
                 Log.d("Response", "Follow " + response.body().getResult());
-              //  Toast.makeText(getApplicationContext(), response.body().getResult(), Toast.LENGTH_LONG).show();
+                //  Toast.makeText(getApplicationContext(), response.body().getResult(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -219,11 +276,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void giveLike(String video_id) {
-
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
-
         likeClassCall = apiInterface.giveLike(video_id);
-
         likeClassCall.enqueue(new Callback<LikeClass>() {
             @Override
             public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
@@ -238,24 +292,24 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-//    private void addFragment(@IdRes int containerViewId,
-//                             @NonNull Fragment fragment,
-//                             @NonNull String fragmentTag) {
-//        Fragment fragmentA = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ME);
-//        if (fragmentA == null) {
-//            fragmentManager
-//                    .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
-//                    .add(containerViewId, fragment, fragmentTag)
-//                    .disallowAddToBackStack()
-////                    .addToBackStack("df")
-//                    .commit();
-//        }
-//    }
+    private void addFragment(@IdRes int containerViewId,
+                             @NonNull Fragment fragment,
+                             @NonNull String fragmentTag) {
+        Fragment fragmentA = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ME);
+        if (fragmentA == null) {
+            fragmentManager
+                    .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
+                    .add(containerViewId, fragment, fragmentTag)
+                    .disallowAddToBackStack()
+//                    .addToBackStack("df")
+                    .commit();
+        }
+    }
 
     private void shareContent() {
         shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, videoUrl);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, position);
         shareIntent.setType("text/plain");
         startActivity(shareIntent);
     }
@@ -276,6 +330,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top, R.anim.enter_from_bottom, R.anim.exit_to_top);
         transaction.add(R.id.commentVideoView, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -299,4 +354,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             }
         });
     }
+
+
 }

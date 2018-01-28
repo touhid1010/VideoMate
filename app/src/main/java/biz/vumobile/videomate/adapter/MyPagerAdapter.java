@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import biz.vumobile.videomate.view.fragment.FragmentFollow;
+import biz.vumobile.videomate.view.fragment.FollowFragment;
 import biz.vumobile.videomate.view.fragment.FragmentLatest;
 import biz.vumobile.videomate.view.fragment.FragmentPopular;
 
@@ -25,7 +25,7 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new FragmentFollow();
+                return new FollowFragment();
             case 1:
                 return new FragmentPopular();
             case 2:

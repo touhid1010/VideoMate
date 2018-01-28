@@ -31,4 +31,10 @@
         <item name="android:minWidth">200dp</item>
     </style>
 
+    <style name="MyProgressBarRound" parent="@style/Base.Widget.AppCompat.ProgressBar">
+        <item name="android:progressBackgroundTint">#0069f0ae</item>
+        <item name="android:progressTint">#ffb405</item>
+        <item name="android:minWidth">200dp</item>
+    </style>
+
 </resources>

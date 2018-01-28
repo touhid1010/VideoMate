@@ -80,7 +80,7 @@
                     android:id="@+id/txtCommentCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8"
+                    android:text="00"
                     android:textColor="#ffffff" />
 
             </LinearLayout>
@@ -102,7 +102,7 @@
                     android:id="@+id/txtLikeCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="28"
+                    android:text="00"
                     android:textColor="#ffffff" />
 
             </LinearLayout>
@@ -123,6 +123,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:text="5"
                     android:textColor="#ffffff" />
 
@@ -133,10 +134,9 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -146,30 +146,38 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/imgUserImage"
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewProfilePic"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_centerVertical="true"
+            android:layout_margin="8dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/circle"
-            android:src="@mipmap/ic_launcher" />
+            app:cardCornerRadius="15dp">
+
+            <ImageView
+                android:id="@+id/imgUserImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_launcher" />
+
+        </android.support.v7.widget.CardView>
+
 
         <TextView
             android:id="@+id/txtUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_toRightOf="@+id/imgUserImage"
+            android:layout_toRightOf="@+id/cardViewProfilePic"
             android:text="User Name"
             android:textColor="#ffffff" />
 
         <ImageView
             android:id="@+id/imgFollow"
-            android:layout_width="90dp"
+            android:layout_width="120dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="2dp"
             android:layout_toRightOf="@+id/txtUserName"
             android:src="@drawable/follow_icon" />
 
@@ -190,7 +198,7 @@
             android:id="@+id/imgView"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_alignBottom="@+id/imgUserImage"
+            android:layout_alignBottom="@+id/cardViewProfilePic"
             android:layout_alignLeft="@+id/txtUserName"
             android:layout_alignStart="@+id/txtUserName"
             android:layout_below="@+id/txtUserName"

@@ -30,12 +30,16 @@ import com.facebook.appevents.AppEventsLogger;
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.adapter.MyPagerAdapter;
 import biz.vumobile.videomate.login.MyLoginOperation;
+import biz.vumobile.videomate.networking.ApiInterface;
+import biz.vumobile.videomate.networking.RetrofitClient;
 import biz.vumobile.videomate.utils.CallBackLatestData;
+import biz.vumobile.videomate.utils.MyConstraints;
+import biz.vumobile.videomate.view.fragment.FragmentLatest;
 import biz.vumobile.videomate.view.fragment.FragmentMe;
 
 import static biz.vumobile.videomate.utils.MyConstraints.FRAGMENT_TAG_ME;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
 
     private static final int EXTERNAL_STORAGE_PERMISSION_CONSTANT = 100;
     private ViewPager viewPager;
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button buttonHome, buttonMe;
     FragmentMe fragmentMe;
     FragmentManager fragmentManager;
+
+    private ApiInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Tab layout
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
 
         runTimePermission();
 
@@ -104,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    protected void addFragment(@IdRes int containerViewId,
-                               @NonNull Fragment fragment,
-                               @NonNull String fragmentTag) {
+    public void addFragment(@IdRes int containerViewId,
+                            @NonNull Fragment fragment,
+                            @NonNull String fragmentTag) {
 
         Fragment fragmentA = fragmentManager.findFragmentByTag(FRAGMENT_TAG_ME);
         if (fragmentA == null) {
@@ -120,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+
 
     protected void removeFragment(@NonNull Fragment fragment) {
         fragmentManager
@@ -211,11 +221,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("upload.success")) {
+                viewPager.setCurrentItem(0);
                 viewPager.setCurrentItem(2);
-                // TODO
-//                intent = new Intent("load.latest");
-//                intent.putExtra("status","1");
-//                sendBroadcast(intent);
             }
         }
     };
@@ -238,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        removeFragment(fragmentMe);
         Log.d("LifeCycle", "pause");
     }
 
@@ -247,4 +253,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         unregisterReceiver(receiver);
     }
+
+
 }

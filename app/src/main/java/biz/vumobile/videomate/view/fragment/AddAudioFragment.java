@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -52,6 +53,8 @@ public class AddAudioFragment extends Fragment implements View.OnClickListener {
     AddAudioAdapter addAudioAdapter;
     List<Song> audioModels = new ArrayList<>();
 
+    ProgressBar progressBar;
+
     private ApiInterface apiInterface;
     private Call<AudioCatModel> audioCatModelCall;
     private Call<AudioModel> audioModelCall;
@@ -69,10 +72,28 @@ public class AddAudioFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
 
         mp = new MediaPlayer();
+        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(getActivity(), "Try again", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
         linearLayoutCategoryButton = view.findViewById(R.id.linearLayoutCategoryButton);
         imageButtonClose = view.findViewById(R.id.imageButtonClose);
         imageButtonClose.setOnClickListener(this);
+
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         recyclerViewAudioList = view.findViewById(R.id.recyclerViewAudioList);
         addAudioAdapter = new AddAudioAdapter(getActivity(), audioModels);
@@ -85,6 +106,12 @@ public class AddAudioFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onPlayClick(View v, int position) {
                 String mUrl = audioModels.get(position).getSongPath().trim().replaceAll(" ", "%20");
+
+                if (progressBar.getVisibility() == View.VISIBLE) {
+                    return;
+                }
+                progressBar.setVisibility(View.VISIBLE);
+
                 if (mp != null) {
                     try {
                         mp.reset();
@@ -149,7 +176,8 @@ public class AddAudioFragment extends Fragment implements View.OnClickListener {
             Button button = new Button(getActivity());
             button.setText(categories.get(i).getName());
             button.setId(categories.get(i).getID());
-            button.setTextColor(getResources().getColor(R.color.text_color_2));
+            button.setBackground(getResources().getDrawable(R.drawable.button_gradient));
+            button.setTextColor(getResources().getColor(R.color.background_color_white));
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -157,7 +185,7 @@ public class AddAudioFragment extends Fragment implements View.OnClickListener {
                 }
             });
 
-            // if more than 3 data found make it double line
+            // If more than 3 data found make it double line
             if (i <= 2) {
                 linearLayout.addView(button);
             } else {

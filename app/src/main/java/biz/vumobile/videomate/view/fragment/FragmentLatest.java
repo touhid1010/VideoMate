@@ -29,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_POSITION;
+
 /**
  * Created by IT-10 on 1/14/2018.
  */
@@ -92,7 +94,7 @@ public class FragmentLatest extends Fragment implements SwipeRefreshLayout.OnRef
 
                 intent = new Intent(getActivity(), VideoViewActivity.class);
 //                intent.putExtra("video_url", posts.getVideoUrl());
-                intent.putExtra("position", position);
+                intent.putExtra(VIDEO_POSITION, position);
                 VideoViewActivity.videoList.clear();
                 for (int a = 0; a < latestListVideo.size(); a++) {
                     VideoViewActivity.videoList.addAll(latestListVideo);

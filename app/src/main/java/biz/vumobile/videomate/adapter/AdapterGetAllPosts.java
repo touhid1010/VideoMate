@@ -43,8 +43,9 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
     }
 
     Random r = new Random();
-    int start = 700;
-    int end = 600;
+    int start = 500;
+    int end = 400;
+    boolean a = false;
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
@@ -52,14 +53,20 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
         Video result = resultList.get(position);
         Log.d("Response", "lol " + result.getDescription());
 
-        holder.imgItem.getLayoutParams().height = r.nextInt(start - end) + end; // getRandomIntInRange(330, 329);
+//        holder.imgItem.getLayoutParams().height = r.nextInt(start - end) + end; // getRandomIntInRange(330, 329);
+        if (a) {
+            holder.imgItem.getLayoutParams().height = start;
+            a = false;
+        } else {
+            holder.imgItem.getLayoutParams().height = end;
+            a = true;
+        }
 
         holder.imgItem.setBackgroundColor(getRandomHSVColor());
         holder.txtTitle.setText(result.getDescription());
         holder.txtViewsCount.setText(String.valueOf(result.getView()));
         Glide.with(mContext).load(result.getThumbnail()).into(holder.imgItem);
         Glide.with(mContext).load(result.getUser().getImageUrl()).placeholder(R.drawable.user).into(holder.imgUser);
-
 
     }
 

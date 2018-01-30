@@ -49,7 +49,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static biz.vumobile.videomate.utils.MyConstraints.AUDIO_PATH;
-import static biz.vumobile.videomate.utils.MyConstraints.FILE_PATH;
 import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_PATH;
 
 public class VideoEditUploadActivity extends AppCompatActivity implements View.OnClickListener, ProgressRequestBody.UploadCallbacks {
@@ -296,13 +295,12 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
             return null;
         }
         Movie audio = null;
-        try { // audioFile
+        try { // audioFile muse me mp4 audio file not mp3
             audio = new MovieCreator().build(audioFile); //  filePath = MyConstraints.FILE_PATH + "La Isla Bonita By Alezee.mp4";
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         } catch (NullPointerException e) {
-
             e.printStackTrace();
             return null;
         }

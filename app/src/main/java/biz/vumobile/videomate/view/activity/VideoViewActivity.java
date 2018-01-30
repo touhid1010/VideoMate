@@ -198,6 +198,12 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 .skipMemoryCache(true)
                 .placeholder(R.drawable.user).into(imgUserImage);
 
+        // don't show follow button on my video
+        String uid = MyLoginOperation.getInstance(this).getUserId();
+        if (videoObj.getUser().getUserID().equals(uid)) {
+            imgFollow.setVisibility(View.INVISIBLE);
+            return;
+        }
         if (videoObj.getFollow() == 0) {
             imgFollow.setVisibility(View.VISIBLE);
         } else {
@@ -258,6 +264,9 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
                 if (response == null) {
+                    return;
+                }
+                if (response.body() == null) {
                     return;
                 }
                 if (response.body().getResult() == null) {

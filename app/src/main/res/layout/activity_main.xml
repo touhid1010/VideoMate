@@ -7,14 +7,36 @@
     android:layout_height="match_parent"
     tools:context="biz.vumobile.videomate.view.activity.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#ff0000"
+        android:contentInsetEnd="0dp"
+        android:contentInsetLeft="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetStart="0dp"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/toolbar" />
+
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
@@ -34,10 +56,11 @@
         android:id="@+id/frameLayoutFragmentPlaceholder"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/viewPager">
 
     </FrameLayout>
 

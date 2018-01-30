@@ -29,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_POSITION;
+
 /**
  * Created by IT-10 on 1/14/2018.
  */
@@ -67,7 +69,6 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
 
         return view;
-
     }
 
     @Override
@@ -76,9 +77,6 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-
-                swipeRefreshLayout.setRefreshing(true);
-
                 parseContent();
             }
         });
@@ -102,14 +100,12 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
                 intent = new Intent(getActivity(), VideoViewActivity.class);
 //                intent.putExtra("video_url", posts.getVideoUrl());
 
-                intent.putExtra("position", position);
+                intent.putExtra(VIDEO_POSITION, position);
                 VideoViewActivity.videoList.clear();
                 for (int a = 0; a < resultList.size(); a++) {
                     VideoViewActivity.videoList.addAll(resultList);
                 }
                 startActivity(intent);
-
-
 
 
 //                startActivity(new Intent(getActivity(), VideoViewActivity.class));
@@ -133,7 +129,7 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void parseContent() {
 
-        //swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout.setRefreshing(true);
 
         resultList.clear();
 
@@ -186,7 +182,6 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-
         parseContent();
     }
 }

@@ -129,8 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
-
     protected void removeFragment(@NonNull Fragment fragment) {
         fragmentManager
                 .beginTransaction().setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_to_top)
@@ -176,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

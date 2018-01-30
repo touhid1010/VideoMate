@@ -83,7 +83,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         progressdialog.setMax(100);
 
-
     }
 
 
@@ -121,7 +120,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         imageButtonMusic.setOnClickListener(this);
 
         cameraView.setWhiteBalance(WhiteBalance.AUTO);
-        cameraView.setAudio(Audio.OFF);
+      //  cameraView.setAudio(Audio.OFF);
         cameraView.addCameraListener(new CameraListener() {
             @Override
             public void onCameraOpened(CameraOptions options) {
@@ -168,6 +167,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageButtonRecord:
+
+                // If no audio set then default audio
+                if (!tempAudioPath.equals("")) {
+                    cameraView.setAudio(Audio.OFF);
+                }
+
                 String timeName = String.valueOf(System.currentTimeMillis()); // getStorageDir(getActivity(), timeName+".mp4")
                 File file = new File(FILE_PATH);
                 file.mkdir();
@@ -311,6 +316,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         protected void onPreExecute() {
             super.onPreExecute();
             progressdialog.show();
+            progressdialog.setCancelable(false);
         }
 
         @Override
@@ -363,9 +369,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             } catch (Exception e) {
                 e.printStackTrace();
-
-
-
+                progressdialog.dismiss();
             }
 
             return null;
@@ -375,7 +379,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             progressdialog.dismiss();
-
         }
     }
 

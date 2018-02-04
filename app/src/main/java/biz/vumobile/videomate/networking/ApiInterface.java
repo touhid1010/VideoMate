@@ -62,6 +62,9 @@ public interface ApiInterface {
     @GET(MyConstraints.GET_ALL_POSTS_POPULAR)
     Call<GetAllPostsClass> getPostsPopular(@Query("id") String id);
 
+    @GET(MyConstraints.GET_ALL_POSTS_OWN)
+    Call<GetAllPostsClass> getPostsOwn(@Query("id") String id);
+
     @GET(MyConstraints.API_GET_AUDIO_CAT)
     Call<AudioCatModel> getAudioCatList();
 

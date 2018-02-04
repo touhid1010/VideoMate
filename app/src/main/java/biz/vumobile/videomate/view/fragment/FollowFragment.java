@@ -120,6 +120,7 @@ public class FollowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private void parseContent() {
         swipeToRefreshFollow.setRefreshing(true);
         followListVideo.clear();
+        adapter.notifyDataSetChanged();
         callLatest = apiInterface.getPostsFollowed(MyLoginOperation.getInstance(getActivity()).getUserId());
         callLatest.enqueue(new Callback<GetAllPostsClass>() {
             @Override
@@ -135,6 +136,7 @@ public class FollowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     textViewMessage.setVisibility(View.VISIBLE);
                     return;
                 }
+                textViewMessage.setVisibility(View.INVISIBLE);
 
                 followListVideo.addAll(response.body().getVideos());
                 adapter.notifyDataSetChanged();
@@ -143,6 +145,7 @@ public class FollowFragment extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void onFailure(Call<GetAllPostsClass> call, Throwable t) {
                 t.printStackTrace();
+                textViewMessage.setVisibility(View.VISIBLE);
                 swipeToRefreshFollow.setRefreshing(false);
             }
 

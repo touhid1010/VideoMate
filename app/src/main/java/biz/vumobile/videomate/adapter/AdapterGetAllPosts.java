@@ -2,6 +2,7 @@ package biz.vumobile.videomate.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import java.util.Random;
 
 import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.model.receivedata.Video;
+import biz.vumobile.videomate.utils.MyApplication;
 
 /**
  * Created by toukirul on 15/1/2018.
@@ -36,15 +38,16 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.row_popular, parent, false);
-
         return new MyViewHolder(view);
     }
 
     Random r = new Random();
-    int start = 500;
-    int end = 400;
+//    int start = 570;
+//    int end = 480;
+
+    int start = MyApplication.getDeviceHeight()/2;
+    int end =  MyApplication.getDeviceHeight()/2 - 100;
     boolean a = false;
 
     @Override
@@ -55,10 +58,10 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
 
 //        holder.imgItem.getLayoutParams().height = r.nextInt(start - end) + end; // getRandomIntInRange(330, 329);
         if (a) {
-            holder.imgItem.getLayoutParams().height = start;
+            holder.cardViewRoot.getLayoutParams().height = start;
             a = false;
         } else {
-            holder.imgItem.getLayoutParams().height = end;
+            holder.cardViewRoot.getLayoutParams().height = end;
             a = true;
         }
 
@@ -79,6 +82,7 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
 
         private ImageView imgItem, imgUser;
         private TextView txtTitle, txtViewsCount;
+        private CardView cardViewRoot;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -86,6 +90,7 @@ public class AdapterGetAllPosts extends RecyclerView.Adapter<AdapterGetAllPosts.
             imgItem = itemView.findViewById(R.id.imgItem);
             imgUser = itemView.findViewById(R.id.imgUser);
             txtTitle = itemView.findViewById(R.id.txtContentTitle);
+            cardViewRoot = itemView.findViewById(R.id.cardViewRoot);
         }
     }
 

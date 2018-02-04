@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import biz.vumobile.videomate.R;
+import biz.vumobile.videomate.VideoFollowingFollowerActivity;
 import biz.vumobile.videomate.adapter.MeMenuRecyclerAdapter;
 import biz.vumobile.videomate.model.user.MeMenuModel;
 import biz.vumobile.videomate.model.user.Userinfo;
 import biz.vumobile.videomate.utils.MyApplication;
+import biz.vumobile.videomate.utils.MyConstraints;
 import biz.vumobile.videomate.utils.SimpleDividerItemDecoration;
 import biz.vumobile.videomate.view.activity.LoginActivity;
 import biz.vumobile.videomate.view.activity.MainActivity;
@@ -40,6 +42,10 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import static biz.vumobile.videomate.utils.MyConstraints.TAB_NAME_FOLLOWER;
+import static biz.vumobile.videomate.utils.MyConstraints.TAB_NAME_FOLLOWING;
+import static biz.vumobile.videomate.utils.MyConstraints.TAB_NAME_VIDEO;
 
 /**
  * Created by IT-10 on 1/16/2018.
@@ -57,7 +63,6 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     ImageButton imageButtonFacebookConnect;
     ImageView imageViewProfilePic;
     TextView textViewUserName, textViewUserId, textViewVideoCount, textViewFollowingCount, textViewFollowerCount;
-
 
     @Nullable
     @Override
@@ -106,6 +111,9 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     private void setUserInfoToUI() {
 
         // invisible fb login part if already logged in
+        if (MyApplication.getInstanceOfUserModel().getFblogin() == null) {
+            return;
+        }
         if (MyApplication.getInstanceOfUserModel().getFblogin() == 1) {
             cardView.setVisibility(View.INVISIBLE);
         }
@@ -129,7 +137,7 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
         //   MeMenuModel meMenuModel3 = new MeMenuModel(R.drawable.ic_action_info, "Logout");
         meMenuModels.add(meMenuModel);
         meMenuModels.add(meMenuModel2);
-        //     meMenuModels.add(meMenuModel3);
+        //   meMenuModels.add(meMenuModel3);
 
         meMenuRecyclerAdapter.notifyDataSetChanged();
 
@@ -139,25 +147,27 @@ public class FragmentMe extends Fragment implements View.OnClickListener, MeMenu
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.linearLayoutVideoTab:
-                //  Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+                goToVideoFollowingFollowerActivity(TAB_NAME_VIDEO);
                 break;
 
             case R.id.linearLayoutFollowingTab:
-                //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+//                goToVideoFollowingFollowerActivity(TAB_NAME_FOLLOWING);
                 break;
 
             case R.id.linearLayoutFollowerTab:
-                //   Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+//                goToVideoFollowingFollowerActivity(TAB_NAME_FOLLOWER);
                 break;
 
             case R.id.imageButtonFacebookConnect:
-
-                startActivity(new Intent(getActivity(), LoginActivity.class));
                 break;
         }
     }
 
-
+    public void goToVideoFollowingFollowerActivity(String tabName) {
+        Intent intent = new Intent(getActivity(), VideoFollowingFollowerActivity.class);
+        intent.putExtra(MyConstraints.TAB_NAME_EXTRA_KEY, tabName);
+        startActivity(intent);
+    }
 
     @Override // recyclerView
     public void onClick(View v, int position) {

@@ -4,23 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="1dp"
-    android:padding="3dp">
+    android:layout_margin="0dp"
+    android:padding="1dp">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/cardViewRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="3dp"
+        android:layout_margin="0dp"
         app:cardCornerRadius="5dp">
 
         <ImageView
             android:id="@+id/imgItem"
+            android:src="@drawable/demoimg"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="300dp"
-            android:maxHeight="35dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/demoimg" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,6 +81,5 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
 
 </RelativeLayout>

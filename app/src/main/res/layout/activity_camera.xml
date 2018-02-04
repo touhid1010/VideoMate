@@ -30,6 +30,15 @@
         android:layout_alignBottom="@+id/cameraView"
         android:gravity="bottom">
 
+        <TextView
+            android:id="@+id/textViewRecordDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/imageButtonRecord"
+            android:text="00 Sec"
+            android:textColor="#fff" />
+
         <ImageButton
             android:id="@+id/imageButtonRecord"
             android:layout_width="100dp"
@@ -42,14 +51,16 @@
             android:scaleType="fitCenter"
             android:src="@drawable/icon_record" />
 
-        <TextView
-            android:id="@+id/textViewRecordDuration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/imageButtonRecord"
-            android:text="00 Sec"
-            android:textColor="#fff" />
+        <ImageButton
+            android:id="@+id/imageButtonStopNow"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_toRightOf="@id/imageButtonRecord"
+            android:background="#00000000"
+            android:contentDescription="STOP NOW"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_record_stop" />
 
     </RelativeLayout>
 

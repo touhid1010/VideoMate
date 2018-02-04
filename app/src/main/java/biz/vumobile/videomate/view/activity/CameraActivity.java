@@ -4,9 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,18 +20,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coremedia.iso.boxes.Container;
-import com.googlecode.mp4parser.authoring.Movie;
-import com.googlecode.mp4parser.authoring.Track;
-import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
-import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.otaliastudios.cameraview.Audio;
 import com.otaliastudios.cameraview.CameraException;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.Facing;
+import com.otaliastudios.cameraview.FrameProcessor;
 import com.otaliastudios.cameraview.SessionType;
+import com.otaliastudios.cameraview.VideoQuality;
 import com.otaliastudios.cameraview.WhiteBalance;
 
 import java.io.BufferedInputStream;
@@ -37,24 +37,27 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.FileChannel;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import biz.vumobile.videomate.R;
+import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.MyConstraints;
 import biz.vumobile.videomate.view.fragment.AddAudioFragment;
 
+import static android.view.View.DRAWING_CACHE_QUALITY_AUTO;
+import static biz.vumobile.videomate.utils.MyConstraints.FILE_DIR_NAME_TEMP;
 import static biz.vumobile.videomate.utils.MyConstraints.FILE_PATH;
+import static biz.vumobile.videomate.utils.MyConstraints.FILE_PATH_TEMP;
 import static biz.vumobile.videomate.utils.MyConstraints.VIDEO_RECORD_TIME;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "CameraActivity";
     CameraView cameraView;
-    ImageButton imageButtonRecord, imageButtonSwitchCamera, imageButtonCameraClose, imageButtonMusic;
+    ImageButton imageButtonRecord, imageButtonSwitchCamera, imageButtonCameraClose, imageButtonMusic, imageButtonStopNow;
 
     ImageView imageViewRecAnim;
     TextView textViewRecordDuration;
@@ -96,6 +99,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         // To show record time
         showVideoDuration();
 
+        makeRequiredDirectory();
 
     }
 
@@ -105,6 +109,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         cameraView = findViewById(R.id.cameraView);
         cameraView.setSessionType(SessionType.VIDEO);
+        cameraView.setFacing(Facing.FRONT);
+        // Walton front camera issue solve by making quality low when front facing camera used
+        if (Build.BRAND.equalsIgnoreCase("WALTON") && cameraView.getFacing() == Facing.FRONT) {
+            cameraView.setVideoQuality(VideoQuality.LOWEST);
+        }
+
 
         mp = new MediaPlayer();
 
@@ -114,13 +124,15 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         imageButtonSwitchCamera = findViewById(R.id.imageButtonSwitchCamera);
         imageButtonCameraClose = findViewById(R.id.imageButtonCameraClose);
         imageButtonMusic = findViewById(R.id.imageButtonMusic);
+        imageButtonStopNow = findViewById(R.id.imageButtonStopNow);
+        imageButtonStopNow.setVisibility(View.INVISIBLE);
+        imageButtonStopNow.setOnClickListener(this);
         imageButtonRecord.setOnClickListener(this);
         imageButtonSwitchCamera.setOnClickListener(this);
         imageButtonCameraClose.setOnClickListener(this);
         imageButtonMusic.setOnClickListener(this);
 
         cameraView.setWhiteBalance(WhiteBalance.AUTO);
-      //  cameraView.setAudio(Audio.OFF);
         cameraView.addCameraListener(new CameraListener() {
             @Override
             public void onCameraOpened(CameraOptions options) {
@@ -160,7 +172,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-
     }
 
     @Override
@@ -174,10 +185,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 String timeName = String.valueOf(System.currentTimeMillis()); // getStorageDir(getActivity(), timeName+".mp4")
-                File file = new File(FILE_PATH);
-                file.mkdir();
+                File file = new File(FILE_PATH, FILE_DIR_NAME_TEMP);
+                if (file.mkdir()) {
+                    Log.d(TAG, "onClick: can't make temp dir");
+                }
 
                 cameraView.startCapturingVideo(new File(file, timeName + ".mp4"), VIDEO_RECORD_TIME);
+
                 imageButtonRecord.setEnabled(false);
 
                 runLoop = true;
@@ -198,6 +212,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                 break;
 
+            case R.id.imageButtonStopNow:
+                cameraView.stop();
+                break;
+
             case R.id.imageButtonSwitchCamera:
                 if (cameraView.getFacing() == Facing.FRONT) {
                     cameraView.setFacing(Facing.BACK);
@@ -206,6 +224,16 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     cameraView.setFacing(Facing.FRONT);
                     imageButtonSwitchCamera.setImageResource(R.drawable.ic_action_camera_rear);
                 }
+
+                // Walton front camera issue solve by making quality low when front facing camera used
+                if (Build.BRAND.equalsIgnoreCase("WALTON")) {
+                    if (cameraView.getFacing() == Facing.FRONT) {
+                        cameraView.setVideoQuality(VideoQuality.LOWEST);
+                    } else {
+                        cameraView.setVideoQuality(VideoQuality.HIGHEST);
+                    }
+                }
+
                 break;
 
             case R.id.imageButtonCameraClose:
@@ -294,6 +322,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                             progressBarTimer.setProgress((int) recTimeToShow);
                             textViewRecordDuration.setText(String.valueOf(recTimeToShow) + " sec");
                         }
+                        if (recTimeToShow > 3) {
+                            imageButtonStopNow.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
 
@@ -301,7 +332,6 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }
         }, 0, 1000);
     }
-
 
     public void fireFromAddAudioFragment(String url, String sName) {
         Log.d("t", "fireFromAddAudioFragment: " + url);
@@ -329,18 +359,16 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 // This will be useful so that you can show a typical 0-100% progress bar
                 int lengthOfFile = connection.getContentLength();
 
-                // Download the file
-                File file = new File(FILE_PATH);
-                if (!file.exists()) {
-                    file.mkdir();
-                }
+                // Make directory at on create
+
 
                 InputStream input = new BufferedInputStream(url1.openStream());
                 String fileName = urlAndName[1];
                 if (!fileName.contains(".mp4")) {
                     fileName = fileName + ".mp4";
                 }
-                OutputStream output = new FileOutputStream(FILE_PATH + fileName);
+                String path = FILE_PATH_TEMP + fileName;
+                OutputStream output = new FileOutputStream(path);
 
                 byte data[] = new byte[1024];
 
@@ -363,9 +391,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 output.close();
                 input.close();
 
-
-                // set file name to edit with video
-                tempAudioPath = FILE_PATH + fileName;
+                // Set file name to edit with video
+                tempAudioPath = FILE_PATH_TEMP + fileName;
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -380,8 +407,33 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             super.onPostExecute(s);
             progressdialog.dismiss();
         }
+
     }
 
+    public void makeRequiredDirectory() {
 
+        // Try to clear temp dir first
+        try {
+            File f = new File(FILE_PATH_TEMP);
+            String[] children = f.list();
+            for (int i = 0; i < children.length; i++) {
+                if (new File(f, children[i]).delete()) {
+                    Log.d(TAG, "makeRequiredDirectory: Delete temp file: " + i);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Make directory tree one after another
+        if (!new File(FILE_PATH).mkdir()) {
+            Log.d(TAG, "doInBackground: cant make root dir 1");
+        }
+        if (!new File(FILE_PATH_TEMP).mkdir()) {
+            Log.d(TAG, "doInBackground: cant make temp dir 2");
+        }
+
+    }
 
 }
+

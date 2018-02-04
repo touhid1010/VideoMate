@@ -7,21 +7,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -33,13 +40,14 @@ import biz.vumobile.videomate.login.MyLoginOperation;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.RetrofitClient;
 import biz.vumobile.videomate.utils.CallBackLatestData;
+import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.MyConstraints;
 import biz.vumobile.videomate.view.fragment.FragmentLatest;
 import biz.vumobile.videomate.view.fragment.FragmentMe;
 
 import static biz.vumobile.videomate.utils.MyConstraints.FRAGMENT_TAG_ME;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     private static final int EXTERNAL_STORAGE_PERMISSION_CONSTANT = 100;
     private ViewPager viewPager;
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button buttonHome, buttonMe;
     FragmentMe fragmentMe;
     FragmentManager fragmentManager;
+    TextView textViewNoInternetMessage;
 
     private ApiInterface apiInterface;
 
@@ -76,11 +85,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         runTimePermission();
 
+        setHeightOfHandset();
+        handleNoInternetMessage();
+        registerReceiver(receiver, new IntentFilter("upload.success"));
+        registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    public void setHeightOfHandset(){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        MyApplication.setDeviceHeight(height);
     }
 
     private void initUI() {
         viewPager = findViewById(R.id.viewPager);
         imageButtonRecord = findViewById(R.id.imageButtonRecord);
+        textViewNoInternetMessage = findViewById(R.id.textViewNoInternetMessage);
+        textViewNoInternetMessage.setVisibility(View.INVISIBLE);
         buttonHome = findViewById(R.id.buttonHome);
         buttonMe = findViewById(R.id.buttonMe);
         imageButtonRecord.setOnClickListener(this);
@@ -90,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentMe = new FragmentMe();
         fragmentManager = getSupportFragmentManager();
 
-        registerReceiver(receiver, new IntentFilter("upload.success"));
     }
 
 
@@ -229,12 +253,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         Log.d("LifeCycle", "resume");
 
+
+
         // Reload user data after fb login
         if (!MyLoginOperation.getInstance(this).getUserId().equals("")) {
             MyLoginOperation.getInstance(this).getUserDataForSingleton(MyLoginOperation.getInstance(this).getUserId());
         }
 
         // Reload video grid data after upload video
+
 
 
     }
@@ -248,8 +275,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         unregisterReceiver(receiver);
+        unregisterReceiver(broadcastReceiver);
+
     }
 
+    public void handleNoInternetMessage() {
+        boolean tf = MyApplication.isNetworkAvailable(this);
+        if (!tf) {
+            textViewNoInternetMessage.setVisibility(View.VISIBLE);
+        } else {
+            textViewNoInternetMessage.setVisibility(View.INVISIBLE);
+            // reload viewpager to reload all data
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.setCurrentItem(1);
+        }
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                handleNoInternetMessage();
+            }
+        }
+    };
 
 }
+

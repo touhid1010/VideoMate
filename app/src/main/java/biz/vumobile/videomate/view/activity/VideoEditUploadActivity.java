@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
 import com.github.guilhe.circularprogressview.CircularProgressView;
 import com.google.gson.Gson;
@@ -37,6 +38,7 @@ import biz.vumobile.videomate.R;
 import biz.vumobile.videomate.model.senddata.MyUploadPostResponseModel;
 import biz.vumobile.videomate.networking.ApiInterface;
 import biz.vumobile.videomate.networking.ProgressRequestBody;
+import biz.vumobile.videomate.utils.Mp4Cutter2Mp4Parser;
 import biz.vumobile.videomate.utils.MyApplication;
 import biz.vumobile.videomate.utils.MyConstraints;
 import okhttp3.MediaType;
@@ -62,6 +64,8 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
     String videoPath, audioPath, outputFilePath = "";
     CircularProgressView circularProgressView;
     TextView textViewUploadPercentage;
+
+    String tempAudio = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,9 +281,9 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
 
 
     /*
-   * @param videoFile path to video file
-   * @param audioFile path to audiofile
-   */
+    * @param videoFile path to video file
+    * @param audioFile path to audiofile
+    */
     String filePath = "";
 
     public String mixVA(final String videoFile, final String audioFile) {
@@ -294,9 +298,26 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
             e.printStackTrace();
             return null;
         }
+
+        // Cut audio mp4 as video mp4 size
+        int vt = 0;
+        try {
+            IsoFile isoFile = new IsoFile(videoFile);
+            vt = (int) isoFile.getMovieBox().getMovieHeaderBox().getDuration();
+            Mp4Cutter2Mp4Parser.startTrim(new File(audioFile), new File(MyConstraints.FILE_PATH_TEMP + System.currentTimeMillis() + "tempAudio.mp4"), 0, vt, new Mp4Cutter2Mp4Parser.DoneCallback() {
+                @Override
+                public void doneCutting(String savedFilePath) {
+                    Log.d(TAG, "doneCutting: " + savedFilePath);
+                    tempAudio = savedFilePath;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Movie audio = null;
         try { // audioFile muse me mp4 audio file not mp3
-            audio = new MovieCreator().build(audioFile); //  filePath = MyConstraints.FILE_PATH + "La Isla Bonita By Alezee.mp4";
+            audio = new MovieCreator().build(tempAudio); //  filePath = MyConstraints.FILE_PATH + "La Isla Bonita By Alezee.mp4";
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -310,11 +331,14 @@ public class VideoEditUploadActivity extends AppCompatActivity implements View.O
 
         Container out = new DefaultMp4Builder().build(video);
 
-        File myDirectory = new File(MyConstraints.FILE_PATH + "/VIDEO/"); // Environment.getExternalStorageDirectory(), "/VideoMate"
-        if (!myDirectory.exists()) {
-            myDirectory.mkdirs();
-        }
-        filePath = myDirectory + "" + System.currentTimeMillis() + ".mp4";
+//        File myDirectory = new File(MyConstraints.FILE_PATH + "/");
+//        if (!myDirectory.exists()) {
+//            if (myDirectory.mkdirs()) {
+//                Log.d(TAG, "mixVA: dir make done: ");
+//            }
+//        }
+
+        filePath = MyConstraints.FILE_PATH + "" + System.currentTimeMillis() + ".mp4";
 
         try {
             RandomAccessFile ram = new RandomAccessFile(String.format(filePath), "rw");

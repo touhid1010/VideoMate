@@ -130,9 +130,8 @@ public class FragmentPopular extends Fragment implements SwipeRefreshLayout.OnRe
     private void parseContent() {
 
         swipeRefreshLayout.setRefreshing(true);
-
         resultList.clear();
-
+        adapter.notifyDataSetChanged();
         getAllPostsClassCall = apiInterface.getPostsPopular(MyLoginOperation.getInstance(getActivity()).getUserId());
 
         getAllPostsClassCall.enqueue(new Callback<GetAllPostsClass>() {

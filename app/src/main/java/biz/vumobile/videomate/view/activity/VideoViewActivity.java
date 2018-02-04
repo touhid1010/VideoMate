@@ -253,6 +253,10 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     private void followUser(String userId, String opponentId) {
 
+        // hide button and make change loaded api follow data
+        imgFollow.setVisibility(View.GONE);
+        videoList.get(position).setFollow(1);
+
         HashMap<String, String> map = new HashMap<>();
         map.put("UserId", userId);
         map.put("FollowedUserId", opponentId);
@@ -263,6 +267,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         likeClassCall.enqueue(new Callback<LikeClass>() {
             @Override
             public void onResponse(Call<LikeClass> call, Response<LikeClass> response) {
+                imgFollow.setVisibility(View.GONE);
                 if (response == null) {
                     return;
                 }
@@ -272,7 +277,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 if (response.body().getResult() == null) {
                     return;
                 }
-                imgFollow.setVisibility(View.GONE);
                 Log.d("Response", "Follow " + response.body().getResult());
                 //  Toast.makeText(getApplicationContext(), response.body().getResult(), Toast.LENGTH_LONG).show();
             }

@@ -45,7 +45,7 @@ import retrofit2.Response;
  * Created by IT-10 on 1/23/2018.
  */
 
-public class AddAudioFragment extends Fragment implements View.OnClickListener {
+public class AddAudioFragment extends Fragment implements View.OnClickListener, AddAudioAdapter.ClickCallback {
 
     LinearLayout linearLayoutCategoryButton;
     ImageView imageButtonClose;
@@ -102,40 +102,40 @@ public class AddAudioFragment extends Fragment implements View.OnClickListener {
 
         apiInterface = RetrofitClient.getRetrofitClient(MyConstraints.API_BASE).create(ApiInterface.class);
 
-        addAudioAdapter.setClickCallback(new AddAudioAdapter.ClickCallback() {
-            @Override
-            public void onPlayClick(View v, int position) {
-                String mUrl = audioModels.get(position).getSongPath().trim().replaceAll(" ", "%20");
-
-                if (progressBar.getVisibility() == View.VISIBLE) {
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-
-                if (mp != null) {
-                    try {
-                        mp.reset();
-                        mp.setDataSource(mUrl);
-                        mp.prepare();
-                        mp.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onAddClick(View v, int position) {
-                CameraActivity cameraActivity = new CameraActivity();
-                //  new DownloadAudioFile().execute(audioModels.get(position).getSongPath(), audioModels.get(position).getSongName());
-                cameraActivity.fireFromAddAudioFragment(audioModels.get(position).getSongPath(), audioModels.get(position).getSongName());
-                // Hide fragment
-                getActivity().onBackPressed();
-            }
-        });
+        addAudioAdapter.setClickCallback(this);
 
         loadAudioCatData();
         loadDataFromCategory(1); // Default load bangle song
+    }
+
+    @Override
+    public void onPlayClick(View v, int position) {
+        String mUrl = audioModels.get(position).getSongPath().trim().replaceAll(" ", "%20");
+
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        progressBar.setVisibility(View.VISIBLE);
+
+        if (mp != null) {
+            try {
+                mp.reset();
+                mp.setDataSource(mUrl);
+                mp.prepare();
+                mp.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onAddClick(View v, int position) {
+        CameraActivity cameraActivity = new CameraActivity();
+        //  new DownloadAudioFile().execute(audioModels.get(position).getSongPath(), audioModels.get(position).getSongName());
+        cameraActivity.fireFromAddAudioFragment(audioModels.get(position).getSongPath(), audioModels.get(position).getSongName());
+        // Hide fragment
+        getActivity().onBackPressed();
     }
 
 
@@ -229,6 +229,8 @@ public class AddAudioFragment extends Fragment implements View.OnClickListener {
         }
 
     }
+
+
 }
 
 
